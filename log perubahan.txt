@@ -1,0 +1,15 @@
+==============
+25 juli 2022
+Controler
+-penambahan header & footer
+
+View
+-penambahan header & footer pada folder input customer
+-penambahan favicon
+
+CSS
+-penambahan style.cc
+
+ASSESTS/IMAGE
+-penambahan image favicon
+========================
