@@ -13,6 +13,7 @@ class Transaksi_model extends CI_Model
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
         $this->db->where('kategori_id', $id);
+        // $this->db->group_by('a.keterangan');
         $this->db->order_by('a.id_transaksi', 'desc');
 
         $query = $this->db->get();
@@ -36,12 +37,14 @@ class Transaksi_model extends CI_Model
     }
 
     public function GettransaksiByID($kode_transaksi, $no_transaksi){
-        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->select('SUM(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, SUM(case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
         $this->db->where('kode_transaksi', $kode_transaksi);
         $this->db->where('no_transaksi', $no_transaksi);
+        $this->db->group_by('a.keterangan');
+        $this->db->order_by('a.akun', 'desc');
         $query = $this->db->get();
 
         $result = $query->result();

@@ -332,7 +332,7 @@ class Transaksi extends BaseController
         $pdf->SetFooterData(array(255, 255, 255), array(255, 255, 255));
 
 
-        $pdf->setHeaderFont(Array('helvetica','',14));
+        $pdf->setHeaderFont(Array('helvetica','',12));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
 
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -398,7 +398,11 @@ class Transaksi extends BaseController
                 // $html .= '<td align="center">'.$d->kode_transaksi.$d->no_transaksi.'</td>';
                 $html .= '<td align="center">'.strftime('%d %b %y', strtotime($d->tgl_transaksi)).'</td>';
                 $html .= '<td align="center">'.$d->akun.'</td>';
-                $html .= '<td align="left">'.$d->nama_akun.' '.$d->keterangan.'</td>';
+                if($d->keterangan == ""){
+                $html .= '<td align="left">'.$d->nama_akun.'</td>';
+                }else{
+                $html .= '<td align="left">'.$d->keterangan.'</td>';
+                }
                 $html .= '<td align="center">'.$nominal. '</td>';
                 $html .= '<td align="center">'.$kred. '</td>';
 
@@ -420,18 +424,14 @@ class Transaksi extends BaseController
 
 
             $html .='
-            <table cellpadding="10" border="1" align="center">
+            <table cellpadding="5" border="0" align="center">
             <tr>
-                <th>Disetujui Oleh</th>
-                <th>Diterima Oleh</th>
                 <th>Dibukukan Oleh</th>
                 <th>Tgl Pembukuan</th>
             </tr>
             <tr>
-                <td style="height:100px;"></td>
-                <td></td>
                 <td>'.$this->global['name'].'</td>
-                <td>'.strftime('%d %B %Y', strtotime(date('d.m.y'))).'</td>
+                <td>'.strftime('%d %b %y', strtotime($d->tgl_transaksi)).'</td>
             </tr>
             </table>';
         

@@ -24,9 +24,7 @@ class Master_model extends CI_Model
         $this->db->from('tbl_kategori');
         $this->db->where('id_kategori != 0');
 
-        if($role === "3"){
-            $this->db->where('id_kategori != 3 AND id_kategori != 4 AND id_kategori != 5');
-        }elseif($role === "4"){
+        if($role === "4"){
             $this->db->where('id_kategori != 1 AND id_kategori != 2 AND id_kategori != 5');
         }else{
             $this->db->where('id_kategori != 5');
@@ -43,7 +41,7 @@ class Master_model extends CI_Model
         $this->db->from('tbl_dafakun');
 
         if($role === "3"){
-            $this->db->where('id_akun <= 11102');
+            $this->db->where('id_akun <= 11102 OR id_akun > 11102 AND id_akun <= 11116');
         }elseif($role === "4"){
             $this->db->where('id_akun > 11102 AND id_akun <= 11117');
         }

@@ -201,7 +201,7 @@
             </li>
             <?php } ?>
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER || $role == ROLE_BANK || $role == ROLE_KABAG)
+            if($role == ROLE_ADMIN || $role == ROLE_MANAGER || $role == ROLE_BANK || $role == ROLE_KABAG || $role == ROLE_KAS)
             {
             ?>
             <li class="treeview">
