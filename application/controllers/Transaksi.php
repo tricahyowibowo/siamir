@@ -51,6 +51,8 @@ class Transaksi extends BaseController
 
         $this->global['pageTitle'] = 'Data Transaksi';
         $data['list_data'] = $this->transaksi_model->GettransaksiByNo($id);
+        $data['list_akun'] = $this->crud_model->tampil_data('tbl_dafakun');
+        
         $this->loadViews("transaksi/edit", $this->global, $data , NULL);
     }
 
@@ -73,6 +75,7 @@ class Transaksi extends BaseController
         $id_transaksi = $this->input->post('id_transaksi');
         $no_transaksi = $this->input->post('no_transaksi');
         $tgl_transaksi = $this->input->post('tgl_transaksi');
+        $akun = $this->input->post('akun');
         $jenis_transaksi = $this->input->post('jenis_transaksi');
         $nominal_transaksi = $this->input->post('nominal_transaksi');
 
@@ -84,6 +87,7 @@ class Transaksi extends BaseController
 				'no_transaksi' => $no_transaksi,
 				'id_transaksi' => $id_transaksi[$index],
 				'tgl_transaksi' => $tgl_transaksi[$index], 
+				'akun' => $akun[$index], 
 				'jenis_transaksi' => $jenis_transaksi[$index], 
 				'nominal_transaksi' => $nominal_transaksi[$index],
 			);   

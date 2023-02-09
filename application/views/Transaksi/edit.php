@@ -70,7 +70,14 @@
                       <td><?=$dd->kode_transaksi." "?><input style="width:70px" type="text" name="no_transaksi[]" value="<?=$dd->no_transaksi?>"></input></td>
                       <td><input style="width:110px" type="date" name="tgl_transaksi[]" value="<?=$dd->tgl_transaksi?>"></input></td>
                       <td><?=$dd->nama_kategori?></td>
-                      <td><?=$dd->id_akun?></td>
+                      <!-- <td><?=$dd->id_akun?></td> -->
+                      <td>
+                      <select class="form-control theSelect" style="width:200px" type="submit" name="akun[]" id="akun[]" method = "get">
+                        <?php foreach($list_akun as $la){ ?>
+                        <option <?= $dd->id_akun === $la->id_akun ? "selected": ""?>  value="<?=$la->id_akun?>"> <?=$la->id_akun?> - <?=$a = $la->nama_akun?></option>
+                        <?php } ?>
+                      </select>
+                      </td>
                       <td><?=$dd->nama_akun." ".$dd->keterangan?></td>
                       <td>
                         <select class="form-control theSelect" name="jenis_transaksi[]" id="jenis_transaksi[]">
