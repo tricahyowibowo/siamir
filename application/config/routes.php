@@ -48,6 +48,10 @@ $route['loginMe'] = 'login/loginMe';
 $route['dashboard'] = 'user';
 $route['logout'] = 'user/logout';
 
+$route['openlock'] = 'login/showlock';
+$route['open/(:num)'] = "login/openlock/$1";
+
+
 $route['userListing'] = 'user/userListing';
 $route['userListing/(:num)'] = "user/userListing/$1";
 

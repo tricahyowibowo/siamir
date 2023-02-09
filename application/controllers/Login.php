@@ -87,6 +87,28 @@ class Login extends CI_Controller{
         }
     }
 
+    public function showlock(){
+        $this->load->model('user_model');
+
+        $data['list_user'] = $this->user_model->userListing();
+
+        $this->load->view("/showlock",  $data, NULL);
+    }
+
+    public function openlock(){
+        $userId = $this->uri->segment(2);
+
+        $where = array('userId' => $userId);
+  
+        $data = array(
+            'isLogin' => 0,
+        );
+
+        $this->crud_model->update($where,$data,'tbl_users');
+
+        redirect('openlock');
+    }
+
     /**
      * This function used to load forgot password view
      */

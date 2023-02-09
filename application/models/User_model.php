@@ -33,10 +33,9 @@ class User_model extends CI_Model
      */
     function userListing()
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.username, BaseTbl.name, Role.role');
+        $this->db->select('BaseTbl.userId, BaseTbl.username, BaseTbl.name, Role.role, BaseTbl.isLogin');
         $this->db->from('tbl_users as BaseTbl');
         $this->db->join('tbl_roles as Role', 'Role.roleId = BaseTbl.roleId','left');
-
         $this->db->where('BaseTbl.isDeleted', 0);
         $query = $this->db->get();
         
