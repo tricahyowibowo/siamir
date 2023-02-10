@@ -86,7 +86,7 @@ input[type="month"]:active::before {
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><i class="fa fa-table" aria-hidden="true"></i> Data Buku besar <?php echo $page ?> periode <?php echo $periode ?></h3>
-              <a href="<?=site_url('transaksi/bukubesarexcel/'.$page.'/'.$akun.'/'.$tgl_awal.'/'.$tgl_akhir)?>" type="button" class="btn btn-success pull-right"><i class="fa fa-download"></i> <span> Export Excel</span></a>
+              <a href="<?=site_url('transaksi/bukubesarexcel/'.$page.'/'.$tgl_awal.'/'.$tgl_akhir.'/'.$akun)?>" type="button" class="btn btn-success pull-right"><i class="fa fa-download"></i> <span> Export Excel</span></a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

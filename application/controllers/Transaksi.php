@@ -645,10 +645,10 @@ class Transaksi extends BaseController
 
     //BUKU BESAR---//
     public function bukubesarexcel(){
-    $page = $this->uri->segment(2);
-    $akun = $this->uri->segment(3);
+    $page = $this->uri->segment(3);
     $tgl_awal = $this->uri->segment(4); 
     $tgl_akhir = $this->uri->segment(5);
+    $akun = $this->uri->segment(6);
     $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
     $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
     $periode = strftime("%B", strtotime(date("Y/m/d")));
@@ -711,7 +711,28 @@ class Transaksi extends BaseController
     }
 
     $sheet->mergeCells('B3:D3');
-    $saldoawal = $this->saldoawal();
+
+    // if (isset($tgl_awal)){
+    //     $bln = substr($tgl_awal, 5, 2);
+    // }else{
+    //     $bln = date('m');
+    // }
+
+    // if ($bln != 1){
+    //     $bln = $bln - 1;
+    // }else{
+    //     $bln = 12;
+    // }
+
+    // $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_awal);
+
+    // $saldo = 0;
+
+    //   foreach($saldoawal as $s){
+    //     $totalsaldo = $s->debet-$s->kredit;
+    //     $saldoawal = $saldo + $totalsaldo;
+    // }
+    $saldoawal = $this->saldoawalbukubesar();
 
     $sheet->setCellValue('B4', 'Saldo Awal');
     $sheet->setCellValue('I4', "Rp. ".number_format($saldoawal)." ,-");
@@ -793,7 +814,7 @@ class Transaksi extends BaseController
     header('Content-Type: application/vnd.ms-excel');
 
         if (isset($tgl_awal) && isset($tgl_akhir)){
-        header('Content-Disposition: attactchment;filename="Buku Besar "'.$page.' '.$awal.' - '.$akhir.'.xlsx');
+        header('Content-Disposition: attactchment;filename="Buku Besar "'.$page.'_'.$awal.' - '.$akhir.'.xlsx');
         }else{
         header('Content-Disposition: attactchment;filename="Buku Besar"'.$page.'_'.$periode.'.xlsx');
         }
