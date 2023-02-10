@@ -262,6 +262,7 @@ class Transaksi_model extends CI_Model
         }
 
         if($tgl_akhir != 0 ){
+<<<<<<< HEAD
         $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
         }else{
         $this->db->where('MONTH(a.tgl_transaksi) <=', $bln);
@@ -269,6 +270,13 @@ class Transaksi_model extends CI_Model
         }
 
         // $this->db->where('a.kategori_id',0);
+=======
+            $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
+        }else{
+            $this->db->where('MONTH(a.tgl_transaksi) <=',$bln);
+        }
+        $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5');
+>>>>>>> ac845fb8fef675566049afc7d9e8ffd4e60ac9f4
         $query = $this->db->get();
 
         $result = $query->result();

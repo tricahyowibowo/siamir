@@ -66,6 +66,33 @@ class BaseController extends CI_Controller {
 		return $saldoakhir;
     }
 
+	function saldoawalbukubesar(){
+		$page = $this->uri->segment(3);
+        $tgl_awal = $this->uri->segment(4);
+
+		if (isset($tgl_akhir)){
+			$bln = substr($tgl_akhir, 5, 2);
+		}else{
+			$bln = date('m');
+		}
+
+		if ($bln != 1){
+			$bln = $bln - 1;
+		}else{
+			$bln = 12;
+		}
+
+        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_awal);
+
+		$saldo = 0;
+
+      	foreach($saldoawal as $s){
+            $totalsaldo = $s->debet-$s->kredit;
+			$saldoakhir = $saldo + $totalsaldo;
+        }
+		return $saldoakhir;
+    }
+
 	function data(){
         $saldo = $this->saldoawal();
 		$page = $this->uri->segment(2);
