@@ -196,7 +196,7 @@
                 <li><a href="<?php echo base_url(); ?>data/kas"><i class="fa fa-bookmark"></i> Data Transaksi Kas</a></li>
                 <li><a href="<?php echo base_url(); ?>jurnal/kas"><i class="fa fa-bookmark"></i> Jurnal Kas</a></li>
                 <li><a href="<?php echo base_url(); ?>bukubesar/kas"><i class="fa fa-book"></i> Buku Besar Kas</a></li>
-                <!-- <li><a href="<?php echo base_url(); ?>kas/neraca"><i class="fa fa-balance-scale"></i> Neraca</a></li> -->
+                <li><a href="<?php echo base_url(); ?>kas/neraca"><i class="fa fa-balance-scale"></i> Neraca</a></li>
               </ul>
             </li>
             <?php } ?>
