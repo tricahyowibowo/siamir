@@ -44,12 +44,13 @@ class Akun extends BaseController
     public function simpansaldoawal(){
         $akun       = $this->input->post('akun');
         $saldoawal  = $this->input->post('saldoawal');
+        $tgl_transaksi  = $this->input->post('tgl_transaksi');
         $user_id    = $this->global ['userId'];
 
 
 
         $data = array(
-            'tgl_transaksi'     => 0000-00-00,
+            'tgl_transaksi'     => $tgl_transaksi,
             'jenis_transaksi'   => "Debet",
             'kode_transaksi'    => "SA",
             'kategori_id'    => " ",
