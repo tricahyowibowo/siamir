@@ -79,7 +79,6 @@ input[type="month"]:active::before {
           </div>
         </div>
       </div>
-      <?php if(isset($tgl_awal)){?>
       <div class="row">
         <div class="col-xs-12">
           <!-- /.box -->
@@ -185,7 +184,6 @@ input[type="month"]:active::before {
         <!-- /.col -->
       </div>
       <!-- /.row -->
-      <?php }?>
     </section>
     <!-- /.content -->
   </div>

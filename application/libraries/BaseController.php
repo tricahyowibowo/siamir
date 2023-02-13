@@ -116,7 +116,7 @@ class BaseController extends CI_Controller {
 		// 	$debet = $t->debet;
 		// 	$kredit = $t->kredit;
 		// }
-		var_dump($saldo);
+		// var_dump($saldo);
 
 		// var_dump($debet);
 		// var_dump($kredit);

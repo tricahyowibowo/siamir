@@ -178,7 +178,14 @@ class Transaksi_model extends CI_Model
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
-        $this->db->where('a.akun >', 11117);
+        // $this->db->where('a.akun >', 11117);
+
+        if($page === "kas"){
+            $this->db->where('a.akun >', 11112);
+        }else{
+            $this->db->where('a.akun <', 11103);
+            $this->db->where('a.akun >', 11117);
+        }
 
         if($page === "kas"){
             $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5');
