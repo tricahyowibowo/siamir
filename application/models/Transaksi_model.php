@@ -292,7 +292,7 @@ class Transaksi_model extends CI_Model
         if($tgl_akhir != 0){
             $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
         }else{
-            $this->db->where('MONTH(a.tgl_transaksi) <=',$bln);
+        $this->db->where('MONTH(a.tgl_transaksi) <=', $bln);
         }
         
         // $this->db->where('a.kategori_id',0);

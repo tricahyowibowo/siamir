@@ -60,6 +60,12 @@
                               </div>
                         </div>
                         
+                        <div class="form-group">
+                          <label for="tgl_transaksi" class="col-sm-4 control-label" >Tanggal :</label>
+                          <div class="col-sm-8">
+                            <input type="date" name="tgl_transaksi" id="tgl_transaksi" class="form-control" >
+                          </div>
+                        </div>
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">

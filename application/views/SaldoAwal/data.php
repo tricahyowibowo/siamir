@@ -49,6 +49,7 @@
                     <th>No</th>
                     <th>Kode Akun</th>
                     <th>Akun</th>
+                    <th>Tanggal</th>
                     <th>Saldo Awal</th>
                   </tr>
                   </thead>
@@ -62,6 +63,7 @@
                       <td><?=$no++?></td>
                       <td><?=$dd->akun?></td>
                       <td><?=$dd->nama_akun?></td>
+                      <td><?=$dd->tgl_transaksi?></td>
                       <td><?php echo "Rp. ".number_format($dd->nominal_transaksi)." ,-";?></td>
                   </tr>
                 <?php endforeach;?>
