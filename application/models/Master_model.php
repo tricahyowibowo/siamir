@@ -8,14 +8,11 @@ class Master_model extends CI_Model
     }
 
     public function getDataSaldoAwal(){
-<<<<<<< HEAD
         $this->db->select('a.akun, a.kategori_id, a.nominal_transaksi, a.tgl_transaksi, b.nama_akun');
-=======
-        $this->db->select('a.akun, a.kategori_id, SUM(a.nominal_transaksi) as nominal_transaksi, b.nama_akun');
->>>>>>> ac845fb8fef675566049afc7d9e8ffd4e60ac9f4
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_dafakun b','b.id_akun = a.akun');
-        $this->db->where('kategori_id', 0);
+        $this->db->where('kategori_id', 6);
+        $this->db->where('kategori_id', 7);
         $this->db->group_by('a.akun');
         $query = $this->db->get();
 
