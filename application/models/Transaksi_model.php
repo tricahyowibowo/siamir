@@ -262,7 +262,9 @@ class Transaksi_model extends CI_Model
             $this->db->where('a.akun <=', 11117);
         }
 
-        $this->db->where('a.tgl_transaksi <', $tgl_akhir);
+        if($tgl_akhir != 0){
+            $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
+        }
         
         if($page === "kas"){
             $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5 AND a.kategori_id != 7');
@@ -297,8 +299,8 @@ class Transaksi_model extends CI_Model
         
         // $this->db->where('a.kategori_id',0);
         if($page === "kas"){
-            // $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5 AND a.kategori_id != 7');
-            $this->db->where('a.kategori_id',6);
+            $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5 AND a.kategori_id != 7');
+            // $this->db->where('a.kategori_id',6);
         }elseif($page === "bank"){
             $this->db->where('a.kategori_id != 1 AND a.kategori_id != 2 AND a.kategori_id != 5 AND a.kategori_id != 6');
         }
