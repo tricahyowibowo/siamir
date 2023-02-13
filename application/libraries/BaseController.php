@@ -57,13 +57,11 @@ class BaseController extends CI_Controller {
 
         $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_akhir);
 
-		$saldo = 0;
-
       	foreach($saldoawal as $s){
             $totalsaldo = $s->debet-$s->kredit;
-			$saldoakhir = $saldo + $totalsaldo;
         }
-		return $saldoakhir;
+
+		return $totalsaldo;
     }
 
 	function saldoawalbukubesar(){
@@ -91,6 +89,7 @@ class BaseController extends CI_Controller {
 			$saldoakhir = $saldo + $totalsaldo;
         }
 		return $saldoakhir;
+
     }
 
 	function data(){
@@ -101,7 +100,8 @@ class BaseController extends CI_Controller {
         $tgl_akhir = $this->input->post('tgl_akhir');
 
 		$cek = $this->uri->segment(1);
-		
+
+
 		switch ($cek) {
 			case 'jurnal':
 				$list_data = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
@@ -110,6 +110,17 @@ class BaseController extends CI_Controller {
 				$list_data = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
 			break;
 		}
+
+		// $total = $this->transaksi_model->GettotalTransaksi($page, $akun, $tgl_awal,$tgl_akhir);
+		// foreach ($total as $t){
+		// 	$debet = $t->debet;
+		// 	$kredit = $t->kredit;
+		// }
+		var_dump($saldo);
+
+		// var_dump($debet);
+		// var_dump($kredit);
+
 
 		if (is_null($tgl_awal) && is_null($tgl_akhir)){
 		  $periode =  strftime("%B", strtotime(date("Y/m/d")));

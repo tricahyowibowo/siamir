@@ -254,6 +254,7 @@ class Transaksi_model extends CI_Model
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        
         if($page === "kas"){
             $this->db->where('a.akun <=', 11102);
         }else{
@@ -261,12 +262,47 @@ class Transaksi_model extends CI_Model
             $this->db->where('a.akun <=', 11117);
         }
 
-        if($tgl_akhir != 0 ){
+        $this->db->where('a.tgl_transaksi <', $tgl_akhir);
+        
+        if($page === "kas"){
+            $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5 AND a.kategori_id != 7');
+        }elseif($page === "bank"){
+            $this->db->where('a.kategori_id != 1 AND a.kategori_id != 2 AND a.kategori_id != 5 AND a.kategori_id != 6');
+        }
+
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
+    public function GettotalTransaksi($page, $bln, $tgl_akhir){
+        $this->db->select('SUM(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, SUM(case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.tgl_transaksi, a.akun, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
+        $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        
+        if($page === "kas"){
+            $this->db->where('a.akun <=', 11102);
+        }else{
+            $this->db->where('a.akun >=', 11103);
+            $this->db->where('a.akun <=', 11117);
+        }
+
+        if($tgl_akhir != 0){
             $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
         }else{
             $this->db->where('MONTH(a.tgl_transaksi) <=',$bln);
         }
-        $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5');
+        
+        // $this->db->where('a.kategori_id',0);
+        if($page === "kas"){
+            // $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 5 AND a.kategori_id != 7');
+            $this->db->where('a.kategori_id',6);
+        }elseif($page === "bank"){
+            $this->db->where('a.kategori_id != 1 AND a.kategori_id != 2 AND a.kategori_id != 5 AND a.kategori_id != 6');
+        }
+
         $query = $this->db->get();
 
         $result = $query->result();
