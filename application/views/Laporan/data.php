@@ -116,17 +116,17 @@
                       <td class="text-center">
                           <?php 
                           if($dd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($dd->debet)." ,-";
+                            echo "Rp. ".number_format($dd->debet,2,",",".");
                             $saldo-=$dd->debet;
                             // $debet+=$dd->nominal_transaksi;
                           }else{
-                            echo "Rp. ".number_format($dd->kredit)." ,-";
+                            echo "Rp. ".number_format($dd->kredit,2,",",".");
                             $saldo+=$dd->kredit;
                             // $debet+=$dd->nominal_transaksi;
                           }
                           ?>
                         </td>
-                        <th><?php echo "Rp. ".number_format($saldo,0)." ,-"; ?></th>
+                        <th><?php echo "Rp. ".number_format($saldo,2,",",".") ?></th>
                                        </tr>
                 <?php endforeach;?>
                 <?php }else { ?>

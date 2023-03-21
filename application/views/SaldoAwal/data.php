@@ -64,7 +64,7 @@
                       <td><?=$dd->akun?></td>
                       <td><?=$dd->nama_akun?></td>
                       <td><?=$dd->tgl_transaksi?></td>
-                      <td><?php echo "Rp. ".number_format($dd->nominal_transaksi)." ,-";?></td>
+                      <td><?php echo "Rp. ".number_format($dd->nominal_transaksi,2,",",".");?></td>
                   </tr>
                 <?php endforeach;?>
                 <?php }else { ?>

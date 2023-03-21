@@ -75,7 +75,7 @@
                       <td class="text-center">
                           <?php 
                           if($dd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($dd->debet)." ,-";
+                            echo "Rp. ".number_format($dd->debet,2,",",".");
                           }else{
                             echo "-";
                           }
@@ -84,7 +84,7 @@
                         <td class="text-center">
                           <?php 
                           if($dd->jenis_transaksi == "Kredit"){
-                            echo "Rp. ".number_format($dd->kredit)." ,-";
+                            echo "Rp. ".number_format($dd->kredit,2,",",".");
                           }else{
                             echo "-";
                           }

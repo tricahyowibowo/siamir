@@ -42,6 +42,10 @@ class Akun extends BaseController
     }
 
     public function simpansaldoawal(){
+
+        $data['list_akun'] = $this->crud_model->tampil_data('tbl_dafakun');
+
+        $kategori       = $this->input->post('kategori');
         $akun       = $this->input->post('akun');
         $saldoawal  = $this->input->post('saldoawal');
         $tgl_transaksi  = $this->input->post('tgl_transaksi');
@@ -53,7 +57,7 @@ class Akun extends BaseController
             'tgl_transaksi'     => $tgl_transaksi,
             'jenis_transaksi'   => "Debet",
             'kode_transaksi'    => "SA",
-            'kategori_id'    => " ",
+            'kategori_id'       => $kategori,
             'akun'              => $akun,
             'nominal_transaksi' => $saldoawal,
             'user_id'           => $user_id

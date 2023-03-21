@@ -480,7 +480,6 @@ class Transaksi extends BaseController
             'tgl_akhir' => $tgl_akhir,
             'akun'   => $akun,
             'list_data'  => $this->transaksi_model->Getneraca($page),
-            'neraca_sebelum'  => $this->transaksi_model->neracathnlalu($page, $thn),
             'list_akun'  => $this->crud_model->tampil_data('tbl_dafakun')
             );
         $this->loadViews("laporan/neraca", $this->global, $data , NULL);

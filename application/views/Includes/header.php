@@ -212,7 +212,7 @@
                 </span>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?php echo base_url(); ?>data/bank"><i class="fa fa-bookmark"></i> Data Transaksi Kas</a></li>
+                <li><a href="<?php echo base_url(); ?>data/bank"><i class="fa fa-bookmark"></i> Data Transaksi Bank</a></li>
                 <li><a href="<?php echo base_url(); ?>jurnal/bank"><i class="fa fa-bookmark"></i> Jurnal Bank</a></li>
                 <li><a href="<?php echo base_url(); ?>bukubesar/bank"><i class="fa fa-book"></i> Buku Besar Bank</a></li>
                 <li><a href="<?php echo base_url(); ?>bank/neraca"><i class="fa fa-balance-scale"></i> Neraca</a></li>
