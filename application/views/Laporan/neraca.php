@@ -44,7 +44,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th colspan="2" style="text-align:left;">Neraca tahun Ini (<?php echo $tahun+1 ?>)</th>
+                    <th colspan="2" style="text-align:left;">Neraca <?php echo $page ?></th>
                   </tr>
                   <tr>
                     <th width="10">Akun</th>
@@ -58,19 +58,83 @@
                   <tbody>
                   <tr>
                     <?php if(is_array($list_data)){ ?>
-                    <?php foreach($list_data as $dd): ?>
+                    <?php 
+                      $totdebet=0;
+                      $totkredit=0;
+                      $totalsaldo=0;
+                      foreach($list_data as $dd): ?>
                       <td><?=$dd->id_akun?></td>
                       <td><?=$dd->nama_akun?></td> 
-                      <td><?php echo "Rp. ".number_format($debet = $dd->debet,0)." ,-";?></td>
-                      <td><?php echo "Rp. ".number_format($kredit = $dd->kredit,0)." ,-";?></td>
-                      <?php $saldo = $debet-$kredit ?>
-                      <th><?php echo "Rp. ".number_format($saldo,0)." ,-"; ?></th>
+                      <td class="text-center">
+                        <?php 
+                          if($dd->jenis_transaksi == "Kredit"){
+                            echo "Rp. ".number_format($dd->kredit,2,",",".")." ,-";
+                            $totalsaldo+=$dd->kredit;
+                            $totdebet+=$dd->kredit;
+                          }else{
+                            echo "-";
+                          }
+                        ?>
+                        
+                      </td>
+                      <td class="text-center" >
+                        <?php 
+                        if($dd->jenis_transaksi == "Debet"){
+                          echo "Rp. ".number_format($dd->debet,2,",",".");
+                          $totalsaldo-=$dd->debet;
+                          $totkredit+=$dd->debet;
+                        }else{
+                          echo "-";
+                        }
+                        ?>
+                      </td>
+                      <th>
+                        <?php 
+                        echo "Rp. ".number_format($totalsaldo,2,",","."); 
+                        // $totalsaldo+=$saldo;
+                        ?>
+                      </th>
                   </tr>
                 <?php endforeach;?>
                 <?php }else { ?>
                       <td colspan="7" align="center"><strong>Data Kosong</strong></td>
                 <?php } ?>
                   </tbody>
+                  <tfoot>
+                  <tr>
+                    <th colspan="3"></th>
+                    <th class="text-right">
+                      Total Neraca
+                    </th>
+                    <th class="text-left">
+                    <?php
+                      echo "Rp. ".number_format($totalsaldo,2,",",".");
+                      ?>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="3"></th>
+                    <th class="text-right">
+                      Saldo Awal
+                    </th>
+                    <th class="text-left">
+                    <?php
+                      echo "Rp. ".number_format($saldoawal,2,",",".");
+                      ?>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="3"></th>
+                    <th class="text-right">
+                      Saldo Akhir
+                    </th>
+                    <th class="text-left">
+                    <?php
+                      echo "Rp. ".number_format($saldoawal-$totalsaldo,2,",",".");
+                      ?>
+                    </th>
+                  </tr>
+                  </tfoot>
                 </table>
               </div>
             <!-- /Tabel -->

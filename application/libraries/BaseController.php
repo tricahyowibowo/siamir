@@ -43,19 +43,7 @@ class BaseController extends CI_Controller {
 		$page = $this->uri->segment(2);
         $tgl_akhir = $this->input->post('tgl_awal');
 
-		if (isset($tgl_akhir)){
-			$bln = substr($tgl_akhir, 5, 2);
-		}else{
-			$bln = date('m');
-		}
-
-		if ($bln != 1){
-			$bln = $bln - 1;
-		}else{
-			$bln = 12;
-		}
-
-        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_akhir);
+        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $tgl_akhir);
 
       	foreach($saldoawal as $s){
             $totalsaldo = $s->debet-$s->kredit;
@@ -93,7 +81,7 @@ class BaseController extends CI_Controller {
     }
 
 	function data(){
-        $saldo = $this->saldoawal();
+        $saldoawal = $this->saldoawal();
 		$page = $this->uri->segment(2);
         $akun = $this->input->post('akun'); 
         $tgl_awal = $this->input->post('tgl_awal'); 
@@ -105,6 +93,9 @@ class BaseController extends CI_Controller {
 		switch ($cek) {
 			case 'jurnal':
 				$list_data = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
+			break;
+			case 'neraca':
+				$list_data = $this->transaksi_model->Getneraca($page);
 			break;
 			default:
 				$list_data = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
@@ -133,7 +124,7 @@ class BaseController extends CI_Controller {
             'tgl_awal'  => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
             'akun'      => $akun,
-            'saldo'     => $saldo,
+            'saldoawal' => $saldoawal,
             'periode'   => $periode,
 			'list_data' => $list_data,
             'list_akun' => $this->crud_model->tampil_data('tbl_dafakun'),
