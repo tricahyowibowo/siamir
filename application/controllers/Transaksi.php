@@ -366,11 +366,11 @@ class Transaksi extends BaseController
             <table cellpadding="10" border="1" align="center">
             <tr>
                 <th width="40" align="center">No</th>
-                <th width="100" align="center">Tanggal</th>
-                <th width="80" align="center">Akun</th>
-                <th width="220" align="center">Keterangan</th>
-                <th align="center">Debit</th>
-                <th align="center">Kredit</th>
+                <th width="70" align="center">Tanggal</th>
+                <th width="55" align="center">Akun</th>
+                <th width="160" align="center">Keterangan</th>
+                <th width="140" align="center">Debit</th>
+                <th width="140" align="center">Kredit</th>
             </tr>';
 
             $no = 1;
@@ -380,7 +380,7 @@ class Transaksi extends BaseController
             foreach($data as $d){
 
                 if($d->jenis_transaksi == "Debet"){
-                    $nominal = "Rp. ".number_format($d->debet)." ,-";
+                    $nominal = "Rp. ".number_format($d->debet,2,",",".");
                     $saldo+=$d->debet;
                     $debet+=$d->debet;
                 }else{
@@ -388,7 +388,7 @@ class Transaksi extends BaseController
                 }
 
                 if($d->jenis_transaksi == "Kredit"){
-                    $kred = "Rp. ".number_format($d->kredit)." ,-";
+                    $kred = "Rp. ".number_format($d->kredit,2,",",".");
                     $saldo+=$d->kredit;
                     $kredit+=$d->kredit;
                 }else{
@@ -419,8 +419,8 @@ class Transaksi extends BaseController
 
             $html .= '<tr>';
             $html .= '<td align="right" colspan="4"><b>Jumlah</b></td>';
-            $html .= '<td align="center">'."Rp. ".number_format($debet)." ,-".'</td>';
-            $html .= '<td align="center">'."Rp. ".number_format($kredit)." ,-".'</td>';
+            $html .= '<td align="center">'."Rp. ".number_format($debet,2,",",".").'</td>';
+            $html .= '<td align="center">'."Rp. ".number_format($kredit,2,",",".").'</td>';
             $html .= '</tr>
             </table><br><br><br>
             </div>';
@@ -463,6 +463,7 @@ class Transaksi extends BaseController
     }
     
     public function neraca(){
+        // $data = $this->data();
         $page = $this->uri->segment(2);
         $this->global['pageTitle'] = 'Laporan Neraca '.$page;
 
@@ -470,19 +471,25 @@ class Transaksi extends BaseController
         $tgl_awal = $this->input->post('tgl_awal'); 
         $tgl_akhir = $this->input->post('tgl_akhir');
 
-        $thn = date('Y');
-        $thn = $thn-1;
+        $saldoawal = $this->transaksi_model->Getsaldoawalneraca($page);
+
+        foreach($saldoawal as $s){
+            $totalsaldo = $s->debet-$s->kredit;
+        }
+
+        // var_dump($totalsaldo);
+
 
         $data = array(
-            'tahun' => $thn,
             'page' => $page,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
             'akun'   => $akun,
+            'saldoawal'  => $totalsaldo,
             'list_data'  => $this->transaksi_model->Getneraca($page),
-            'neraca_sebelum'  => $this->transaksi_model->neracathnlalu($page, $thn),
             'list_akun'  => $this->crud_model->tampil_data('tbl_dafakun')
             );
+
         $this->loadViews("laporan/neraca", $this->global, $data , NULL);
     }
 // LAPORAN EXCEL//
@@ -587,15 +594,15 @@ class Transaksi extends BaseController
         $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
         $sheet->setCellValue('E'.$numrow, $dd->id_akun);
         $sheet->setCellValue('F'.$numrow, $dd->nama_akun." ".$dd->keterangan);
-        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->debet)." ,-");
-        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->kredit)." ,-");
+        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->debet,2,",","."));
+        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->kredit,2,",","."));
 
 
         $debet = $debet + $dd->debet;
         $kredit = $kredit + $dd->kredit;
         $saldo = $saldo+($dd->debet-$dd->kredit);
 
-        $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo)." ,-");
+        $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo,2,",","."));
 
 
         $sheet->getColumnDimension('B')->setAutoSize(true);
@@ -622,8 +629,8 @@ class Transaksi extends BaseController
         $numrow++; // Tambah 1 setiap kali looping
     }
     $sheet->setCellValue('F'.$numrow, 'Total Akhir');
-    $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet)." ,-");
-    $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit)." ,-");
+    $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet,2,",","."));
+    $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit,2,",","."));
     $sheet->getStyle('F'.$numrow)->applyFromArray($styleRight);
     $sheet->getStyle('G'.$numrow)->applyFromArray($style_col);
     $sheet->getStyle('H'.$numrow)->applyFromArray($style_col);
@@ -735,7 +742,7 @@ class Transaksi extends BaseController
     $saldoawal = $this->saldoawalbukubesar();
 
     $sheet->setCellValue('B4', 'Saldo Awal');
-    $sheet->setCellValue('I4', "Rp. ".number_format($saldoawal)." ,-");
+    $sheet->setCellValue('I4', "Rp. ".number_format($saldoawal,2,",","."));
     $sheet->mergeCells('B4:H4');
     $sheet->getStyle('B4:H4')->applyFromArray($style_col);
     $sheet->getStyle('B4')->applyFromArray($styleRight);  
@@ -772,14 +779,14 @@ class Transaksi extends BaseController
         $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
         $sheet->setCellValue('E'.$numrow, $dd->id_akun);
         $sheet->setCellValue('F'.$numrow, $dd->nama_akun." ".$dd->keterangan);
-        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->kredit)." ,-");
-        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->debet)." ,-");
+        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->kredit,2,",","."));
+        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->debet,2,",","."));
 
         $debet = $debet + $dd->debet;
         $kredit = $kredit + $dd->kredit;
         $saldo = $saldo+($dd->kredit-$dd->debet);
 
-        $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo)." ,-");
+        $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo,2,",","."));
 
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
@@ -804,8 +811,8 @@ class Transaksi extends BaseController
         $numrow++; // Tambah 1 setiap kali looping
     }
     $sheet->setCellValue('F'.$numrow, 'Total Akhir');
-    $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet)." ,-");
-    $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit)." ,-");
+    $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet,2,",","."));
+    $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit,2,",","."));
     $sheet->getStyle('F'.$numrow)->applyFromArray($styleRight);
     $sheet->getStyle('G'.$numrow)->applyFromArray($style_col);
     $sheet->getStyle('H'.$numrow)->applyFromArray($style_col);

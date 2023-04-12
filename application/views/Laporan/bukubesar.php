@@ -97,7 +97,7 @@ input[type="month"]:active::before {
                   <tr>
                       <th colspan="4" >Periode : <?php echo $periode ?></th>
                       <th colspan="2" class="text-right">Saldo Awal</th>
-                      <th><?php echo "Rp. ".number_format( $saldo )." ,-" ?></th>
+                      <th><?php echo "Rp. ".number_format( $saldoawal,2,",",".")?></th>
                   </tr>
                   <tr>
                     <th>No</th>
@@ -132,8 +132,8 @@ input[type="month"]:active::before {
                       <td class="text-center">
                           <?php 
                           if($dd->jenis_transaksi == "Kredit"){
-                            echo "Rp. ".number_format($dd->kredit)." ,-";
-                            $saldo+=$dd->kredit;
+                            echo "Rp. ".number_format($dd->kredit,2,",",".")." ,-";
+                            $saldoawal+=$dd->kredit;
                             $debet+=$dd->kredit;
                           }else{
                             echo "-";
@@ -143,15 +143,15 @@ input[type="month"]:active::before {
                         <td class="text-center">
                           <?php 
                           if($dd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($dd->debet)." ,-";
-                            $saldo-=$dd->debet;
+                            echo "Rp. ".number_format($dd->debet,2,",",".");
+                            $saldoawal-=$dd->debet;
                             $kredit+=$dd->debet;
                           }else{
                             echo "-";
                           }
                           ?>
                         </td>
-                        <th><?php echo "Rp. ".number_format($saldo,0)." ,-"; ?></th>       
+                        <th><?php echo "Rp. ".number_format($saldoawal,2,",","."); ?></th>       
                     </tr>
                 <?php endforeach;?>
                 <?php }else { ?>
@@ -163,12 +163,12 @@ input[type="month"]:active::before {
                     <th colspan="4"></th>
                     <th class="text-center">
                       <?php
-                      echo "Rp. ".number_format($debet)." ,-";
+                      echo "Rp. ".number_format($debet,2,",",".");
                       ?>
                     </th>
                     <th class="text-center">
                     <?php
-                      echo "Rp. ".number_format($kredit)." ,-";
+                      echo "Rp. ".number_format($kredit,2,",",".");
                       ?>
                     </th>
                   </tr>

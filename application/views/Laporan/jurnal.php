@@ -112,7 +112,7 @@
                         <?php 
                         if($dd->jenis_transaksi == "Debet"){
                           $totdebet+=$dd->debet;
-                          echo "Rp. ".number_format($dd->debet)." ,-";
+                          echo "Rp. ".number_format($dd->debet,2,",",".");
                         }else{
                           echo "-";
                         }
@@ -122,7 +122,7 @@
                         <?php 
                         if($dd->jenis_transaksi == "Kredit"){
                           $totkredit+=$dd->kredit;
-                          echo "Rp. ".number_format($dd->kredit)." ,-";
+                          echo "Rp. ".number_format($dd->kredit,2,",",".");
                         }else{
                           echo "-";
                         }
@@ -134,7 +134,7 @@
                           $debet+=$dd->debet;
                           $kredit+=$dd->kredit;
                           $saldo = $debet-$kredit;
-                          echo "Rp. ".number_format($saldo)." ,-";
+                          echo "Rp. ".number_format($saldo,2,",",".");
                         }else{
                           echo " ";
                         }
@@ -155,12 +155,12 @@
                     <th></th>
                     <!-- <th class="text-center">
                       <?php
-                      echo "Rp. ".number_format($totdebet)." ,-";
+                      echo "Rp. ".number_format($totdebet,2,",",".");
                       ?>
                     </th>
                     <th class="text-center">
                     <?php
-                      echo "Rp. ".number_format($totkredit)." ,-";
+                      echo "Rp. ".number_format($totkredit,2,",",".");
                       ?>
                     </th> -->
                   </tr>

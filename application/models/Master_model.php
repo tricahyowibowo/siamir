@@ -25,9 +25,9 @@ class Master_model extends CI_Model
         $this->db->where('id_kategori != 0');
 
         if($role === "4"){
-            $this->db->where('id_kategori != 1 AND id_kategori != 2 AND id_kategori != 5');
+            $this->db->where('id_kategori != 1 AND id_kategori != 2 AND id_kategori != 5 AND id_kategori != 6 AND id_kategori != 7');
         }else{
-            $this->db->where('id_kategori != 5');
+            $this->db->where('id_kategori != 5 AND id_kategori != 6 AND id_kategori != 7');
         }
         
         $query = $this->db->get();

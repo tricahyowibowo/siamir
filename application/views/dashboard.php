@@ -35,7 +35,7 @@
             <span class="info-box-icon bg-aqua"><i class="ion ion-ios-paper"></i></span>
             <div class="info-box-content">
               <a href="<?= base_url('transaksi/datatransaksi/'.$data->id_kategori)?>" style="color:black;"><span class="info-box-text"><?php echo $data->nama_kategori?></span></a>
-              <span class="info-box-number"><?php echo "Rp. ".number_format($data->debet)." ,-"; ?><small></small></span>
+              <span class="info-box-number"><?php echo "Rp. ".number_format($data->debet,2,",","."); ?><small></small></span>
             </div>
             <!-- /.info-box-content -->
           </div>
