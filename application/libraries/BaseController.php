@@ -125,7 +125,7 @@ class BaseController extends CI_Controller {
 		if (is_null($tgl_awal) && is_null($tgl_akhir)){
 		  $periode =  strftime("%B", strtotime(date("Y/m/d")));
 		} else {
-		  $periode =  strftime("%d %B %Y", strtotime($tgl_awal))." - ".strftime("%d %B %Y", strtotime($tgl_akhir));
+		  $periode =  date_indo($tgl_awal)." - ".date_indo($tgl_akhir);
 		}
 
 		$data = array(

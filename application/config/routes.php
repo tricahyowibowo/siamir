@@ -49,7 +49,7 @@ $route['dashboard'] = 'user';
 $route['logout'] = 'user/logout';
 
 $route['openlock'] = 'login/showlock';
-$route['open/(:num)'] = "login/openlock/$1";
+$route['open/(:num)'] = 'login/openlock/$1';
 
 
 $route['userListing'] = 'user/userListing';

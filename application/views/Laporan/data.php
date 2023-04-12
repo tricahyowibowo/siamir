@@ -110,7 +110,7 @@
                     <?php foreach($list_data as $dd): ?>
                       <td><?=$no++?></td>
                       <td><a style="color:black" href="<?=base_url('transaksi/cetak/'.$dd->kode_transaksi.$dd->no_transaksi)?>"><?= $dd->kode_transaksi.$dd->no_transaksi?></a></td>
-                      <td><?=strftime('%d %b %Y', strtotime($dd->tgl_transaksi))?></td>
+                      <td><?=mediumdate_indo($dd->tgl_transaksi)?></td>
                       <td><?=$dd->nama_kategori?></td>
                       <td><?=$dd->id_akun." - ".$dd->nama_akun?> <?=$dd->keterangan?></td>
                       <td class="text-center">
