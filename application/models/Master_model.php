@@ -19,15 +19,15 @@ class Master_model extends CI_Model
         return $result;
     }
 
-    public function getDataKategori($role){
+    public function getDataKategori($page){
         $this->db->select('*');
         $this->db->from('tbl_kategori');
         $this->db->where('id_kategori != 0');
 
-        if($role === "4"){
-            $this->db->where('id_kategori != 1 AND id_kategori != 2 AND id_kategori != 5 AND id_kategori != 6 AND id_kategori != 7');
+        if($page != "kas"){
+            $this->db->where('id_kategori > 2 AND id_kategori < 5');
         }else{
-            $this->db->where('id_kategori != 5 AND id_kategori != 6 AND id_kategori != 7');
+            $this->db->where('id_kategori < 3');
         }
         
         $query = $this->db->get();
@@ -36,13 +36,13 @@ class Master_model extends CI_Model
         return $result;
     }
 
-    public function getDataSumber($role){
+    public function getDataSumber($page){
         $this->db->select('*');
         $this->db->from('tbl_dafakun');
 
-        if($role === "3"){
-            $this->db->where('id_akun <= 11102 OR id_akun > 11102 AND id_akun <= 11116');
-        }elseif($role === "4"){
+        if($page === "kas"){
+            $this->db->where('id_akun <= 11102');
+        }elseif($page === "bank"){
             $this->db->where('id_akun > 11102 AND id_akun <= 11117');
         }
 
@@ -88,12 +88,13 @@ class Master_model extends CI_Model
         return $result;
     }
 
-    public function GettransaksiByNama($nama){
+    public function GettransaksiByNIK($NIK){
         $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
-        $this->db->where('keterangan', $nama);
+        $this->db->join('tbl_karyawan d','d.nama_karyawan=a.keterangan');
+        $this->db->where('NIK', $NIK);
         $this->db->order_by('a.id_transaksi', 'desc');
 
         $query = $this->db->get();

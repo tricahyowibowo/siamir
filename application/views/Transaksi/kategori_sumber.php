@@ -16,7 +16,7 @@
               <!-- general form elements -->
             <div class="box box-primary">
               <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Pilih Kategori</h3>
+                <h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Pilih Kategori <?= $page ?></h3>
               </div>
               <!-- /.box-header -->
               <!-- form start -->
@@ -38,45 +38,19 @@
 
                 <div class="row">
                   <div class="col-md-8">
-                    <form class="form-horizontal" action="<?=base_url('transaksi/tambahdata')?>" role="form" id="addKategori" method="post">
+                    <form class="form-horizontal" action="<?=base_url('laporan/'.$page)?>" role="form" id="addKategori" method="post">
                       <div class="box-body">
-
-
                         <div class="form-group">
-                          <label for="kategori" class="col-sm-4 control-label">Kategori :</label>
+                          <label for="bank" class="col-sm-4 control-label"><?=$page?> :</label>
                           <div class="col-sm-6">
-                            <select class="form-control required" name="kategori">
-                              <option value="">-- Pilih Kategori--</option>
-                              <?php foreach($list_kategori as $l){ ?>
-                              <option value="<?=$l->id_kategori?>"><?=$l->nama_kategori?></option>
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="form-group">
-                          <?php if ($page === "kas"){ ?>
-                            <label for="kas" class="col-sm-4 control-label">Kas :</label>
-                          <?php } else { ?>
-                            <label for="bank" class="col-sm-4 control-label">Bank :</label>
-                          <?php }?> 
-                          <div class="col-sm-3">
-                            <select class="form-control required" name="sumber" id="sumber">
-                              <option value="">-- Pilih Sumber--</option>
+                            <select class="form-control required" name="bank" id="bank">
+                              <option value="">-- Pilih <?=$page?>--</option>
                               <?php foreach($list_bank as $b){ ?>
                               <option value="<?=$b->id_akun?>"><?=$b->nama_akun?></option>
                               <?php } ?>
                             </select>
                           </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="tgl_transaksi" class="col-sm-4 control-label" >Tanggal :</label>
-                              <div class="col-sm-3">
-                              <input type="date" name="tgl_transaksi" id="tgl_transaksi" class="form-control required" placeholder="Klik Disini">
-                              </div>
-                        </div>
-                        
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">

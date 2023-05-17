@@ -21,6 +21,8 @@ input[type="month"]:active::before {
         <li>Tables</li>
         <li class="active"><a href="#">Tabel Buku besar <?php echo $page ?></a></li>
       </ol>
+      <a href="<?= base_url('datalaporan/'.$page.'/'.$filter); ?>"> <i class="fa fa-arrow-circle-left"></i> Kembali</a>
+
     </section>
 
     <!-- Main content -->
@@ -35,19 +37,7 @@ input[type="month"]:active::before {
             <form role="form" method="post">
               <div class="box-body">
                 <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Akun</label>
-                      <select class="form-control theSelect" name="akun" id="akun">
-                        <option value="">- Pilih Akun -</option>
-                        <?php foreach($list_akun as $la){ ?>
-                        <option <?= $akun === $la->id_akun ? "selected ": ""?> value="<?=$la->id_akun?>"> <?=$la->id_akun?> - <?=$la->nama_akun?></option>
-
-                        <?php } ?>
-                      </select>   
-                    </div>
-                  </div>
-                  <div class="col-md-8">
+                  <div class="col-md-12">
                     <div class="form-group">
                       <div class="col-md-6">
                         <label for="tgl_awal">Tanggal Awal</label>
@@ -71,7 +61,7 @@ input[type="month"]:active::before {
                 </div>
               </div>
                 <div class="box-footer">
-                  <a href="<?= base_url('bukubesar/'.$page)?>" class="btn btn-warning pull-left">Reset</a>
+                  <a href="<?= base_url('bukubesar/'.$page.'/'.$filter)?>" class="btn btn-warning pull-left">Reset</a>
                   <button type="submit" class="btn btn-primary pull-right">Filter</button>
                 </div>
               </form>
@@ -124,17 +114,23 @@ input[type="month"]:active::before {
                   </tr> -->
   
                   <tr>
-                    <?php foreach($list_data as $dd): ?>
+                    <?php foreach($list_datafilter as $dd): ?>
+                      <?php 
+                      $kode_transaksi = $dd->kode_transaksi;
+                      $no_transaksi = $dd->no_transaksi;
+                      $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $akun, $tgl_awal, $tgl_akhir); 
+
+                      foreach ($rinci_data as $rd) { ?>
                       <td><?=$no++?></td>
-                      <td><?= $dd->kode_transaksi.$dd->no_transaksi?></td>
-                      <td><?=mediumdate_indo($dd->tgl_transaksi)?></td>
-                      <td><?=$dd->id_akun." - ".$dd->nama_akun?> <?=$dd->keterangan?></td>
+                      <td><?= $rd->kode_transaksi.$rd->no_transaksi?></td>
+                      <td><?=mediumdate_indo($rd->tgl_transaksi)?></td>
+                      <td><?=$rd->id_akun." - ".$rd->nama_akun?> <?=$rd->keterangan?></td>
                       <td class="text-center">
                           <?php 
-                          if($dd->jenis_transaksi == "Kredit"){
-                            echo "Rp. ".number_format($dd->kredit,2,",",".")." ,-";
-                            $saldoawal+=$dd->kredit;
-                            $debet+=$dd->kredit;
+                          if($rd->jenis_transaksi == "Kredit"){
+                            echo "Rp. ".number_format($rd->kredit,2,",",".")." ,-";
+                            $saldoawal+=$rd->kredit;
+                            $debet+=$rd->kredit;
                           }else{
                             echo "-";
                           }
@@ -142,16 +138,18 @@ input[type="month"]:active::before {
                         </td>
                         <td class="text-center">
                           <?php 
-                          if($dd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($dd->debet,2,",",".");
-                            $saldoawal-=$dd->debet;
-                            $kredit+=$dd->debet;
+                          if($rd->jenis_transaksi == "Debet"){
+                            echo "Rp. ".number_format($rd->debet,2,",",".");
+                            $saldoawal-=$rd->debet;
+                            $kredit+=$rd->debet;
                           }else{
                             echo "-";
                           }
                           ?>
                         </td>
-                        <th><?php echo "Rp. ".number_format($saldoawal,2,",","."); ?></th>       
+                        <th><?php echo "Rp. ".number_format($saldoawal,2,",","."); ?></th> 
+                        <?php }?>
+
                     </tr>
                 <?php endforeach;?>
                 <?php }else { ?>

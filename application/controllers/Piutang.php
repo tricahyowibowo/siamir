@@ -40,11 +40,11 @@ class Piutang extends BaseController
 
     public function detaildatapiutang($nama){
 
-        $nama = $this->uri->segment(3);
+        $NIK = $this->uri->segment(3);
         $data['role'] = $this->global ['role'];
 
         $this->global['pageTitle'] = 'Data Transaksi';
-        $data['list_data'] = $this->master_model->GettransaksiByNama($nama);
+        $data['list_data'] = $this->master_model->GettransaksiByNIK($NIK);
         $this->loadViews("piutang/detail", $this->global, $data , NULL);
     }
 

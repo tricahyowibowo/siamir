@@ -67,7 +67,7 @@
                     <?php foreach($list_data as $dd): ?>
                       <td><?=$no++?></td>
                       <td><?= $dd->NIK?></td>
-                      <td><a href="<?php base_url('piutang/detaildatapiutang/'.$dd->nama_karyawan)?>"><?= $dd->nama_karyawan ?></td>
+                      <td><a href="<?= base_url('piutang/detaildatapiutang/'.$dd->NIK)?>" style="color:black"><?= $dd->nama_karyawan ?></td>
                       <td><?=$dd->nama_divisi?></td>
                       <td><?php echo "Rp. ".number_format($kredit = $dd->kredit,0)." ,-";?></td>
                       <td><?php echo "Rp. ".number_format($debet = $dd->debet,0)." ,-";?></td>
@@ -105,36 +105,6 @@ $(document).ready(function() {
          paging   : true,
          info   : true,
          responsive: true,
-         
-
-        dom:
-      "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
-      "<'row'<'col-sm-12'tr>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        buttons: [{
-            extend: 'print',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          {
-            extend: 'pdf',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          {
-            extend: 'excel',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          'colvis'
-        ],
-        
     } );
     
  

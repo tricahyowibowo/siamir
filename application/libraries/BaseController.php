@@ -41,13 +41,27 @@ class BaseController extends CI_Controller {
 
 	function saldoawal(){
 		$page = $this->uri->segment(2);
+		$akun = $this->uri->segment(3);
+
+		var_dump($akun);
         $tgl_akhir = $this->input->post('tgl_awal');
 
-        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $tgl_akhir);
+        $saldoawal = $this->transaksi_model->Getsaldoawal($akun, $tgl_akhir);
+        $totaltransaksi = $this->transaksi_model->GettotTransaksi($akun, $tgl_akhir);
 
-      	foreach($saldoawal as $s){
-            $totalsaldo = $s->debet-$s->kredit;
+		foreach($saldoawal as $s){
+            $saldoawal = $s->debet - $s->kredit;
         }
+
+		foreach($totaltransaksi as $s){
+            $saldotransaksi = $s->debet - $s->kredit;
+        }
+
+
+		$totalsaldo = $saldoawal+$saldotransaksi;
+
+		var_dump($saldoawal);
+		var_dump($saldotransaksi);
 
 		return $totalsaldo;
     }
@@ -83,9 +97,12 @@ class BaseController extends CI_Controller {
 	function data(){
         $saldoawal = $this->saldoawal();
 		$page = $this->uri->segment(2);
+		$filterakun = $this->uri->segment(3);
         $akun = $this->input->post('akun'); 
         $tgl_awal = $this->input->post('tgl_awal'); 
         $tgl_akhir = $this->input->post('tgl_akhir');
+		$filter_akun = $this->transaksi_model->Getfilterakun($filterakun, $tgl_awal, $tgl_akhir);
+		
 
 		$cek = $this->uri->segment(1);
 
@@ -126,8 +143,10 @@ class BaseController extends CI_Controller {
             'akun'      => $akun,
             'saldoawal' => $saldoawal,
             'periode'   => $periode,
+			'filter' 		=> $filterakun,
 			'list_data' => $list_data,
-            'list_akun' => $this->crud_model->tampil_data('tbl_dafakun'),
+			'list_datafilter' => $filter_akun,
+            'list_akun' => $this->transaksi_model->GetAkun(),
             );
 		return $data;
 	}

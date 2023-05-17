@@ -145,24 +145,6 @@
               </ul>
             </li>
             <?php } ?>
-            <!-- <?php
-            if($role == ROLE_ADMIN)
-            {
-            ?>
-            <li class="header">GUDANG BAHAN BAKU</li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa  fa-list"></i> <span>Data Bahan Baku</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="<?php echo base_url(); ?>barangmasuk"><i class="fa fa-circle-o"></i> Data Bahan Masuk</a></li>
-                <li><a href="<?php echo base_url(); ?>barangkeluar"><i class="fa fa-circle-o"></i>Data Bahan Keluar</a></li>
-              </ul>
-            </li>
-            <?php } ?> -->
             <?php
             if($role != ROLE_PK)
             {
@@ -175,9 +157,9 @@
               </a>
             </li> -->
             <li>
-              <a href="<?php echo base_url().'transaksi/kategori/'.$role; ?>">
+              <a href="<?php echo base_url().'transaksi/tambahdataexcel' ?>">
                 <i class="fa fa-plus"></i>
-                <span>Tambah Transaksi</span>
+                <span>Tambah Transaksi via CSV</span>
               </a>
             </li>
             <?php } ?>
@@ -187,16 +169,18 @@
             ?>
             <li class="treeview">
               <a href="#">
-                <i class="fa  fa-money"></i> <span>Data Kas</span>
+                <i class="fa  fa-money"></i> <span>Transaksi Kas</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?php echo base_url(); ?>data/kas"><i class="fa fa-bookmark"></i> Data Transaksi Kas</a></li>
+                <li><a href="<?php echo base_url(); ?>tambahtransaksi/kas"><i class="fa fa-plus"></i><span>Tambah Transaksi</span></a></li>
+                <li><a href="<?php echo base_url(); ?>laporantransaksi/kas"><i class="fa fa-file"></i><span>Laporan Kas</span></a></li>
+                <!-- <li><a href="<?php echo base_url(); ?>data/kas"><i class="fa fa-bookmark"></i> Data Transaksi Kas</a></li>
                 <li><a href="<?php echo base_url(); ?>jurnal/kas"><i class="fa fa-bookmark"></i> Jurnal Kas</a></li>
                 <li><a href="<?php echo base_url(); ?>bukubesar/kas"><i class="fa fa-book"></i> Buku Besar Kas</a></li>
-                <li><a href="<?php echo base_url(); ?>neraca/kas"><i class="fa fa-balance-scale"></i> Neraca</a></li>
+                <li><a href="<?php echo base_url(); ?>neraca/kas"><i class="fa fa-balance-scale"></i> Neraca</a></li> -->
               </ul>
             </li>
             <?php } ?>
@@ -206,16 +190,18 @@
             ?>
             <li class="treeview">
               <a href="#">
-                <i class="fa  fa-bank"></i> <span>Data Bank</span>
+                <i class="fa  fa-bank"></i> <span>Transaksi Bank</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?php echo base_url(); ?>data/bank"><i class="fa fa-bookmark"></i> Data Transaksi Bank</a></li>
+                <li><a href="<?php echo base_url(); ?>tambahtransaksi/bank"><i class="fa fa-plus"></i><span>Tambah Transaksi</span></a></li>
+                <li><a href="<?php echo base_url(); ?>laporantransaksi/bank"><i class="fa fa-file"></i><span>Laporan Bank</span></a></li>
+                <!-- <li><a href="<?php echo base_url(); ?>kategoribank"><i class="fa fa-bookmark"></i> Data Transaksi Bank</a></li>
                 <li><a href="<?php echo base_url(); ?>jurnal/bank"><i class="fa fa-bookmark"></i> Jurnal Bank</a></li>
                 <li><a href="<?php echo base_url(); ?>bukubesar/bank"><i class="fa fa-book"></i> Buku Besar Bank</a></li>
-                <li><a href="<?php echo base_url(); ?>neraca/bank"><i class="fa fa-balance-scale"></i> Neraca</a></li>
+                <li><a href="<?php echo base_url(); ?>neraca/bank"><i class="fa fa-balance-scale"></i> Neraca</a></li> -->
               </ul>
             </li>
             <?php } ?>

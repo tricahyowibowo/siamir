@@ -7,6 +7,8 @@
         <li>Tables</li>
         <li class="active"><a href="#">Tabel Jurnal <?php echo $page ?></a></li>
       </ol>
+      <a href="<?= base_url('datalaporan/'.$page.'/'.$filter); ?>"> <i class="fa fa-arrow-circle-left"></i> Kembali</a>
+
     </section>
 
     <!-- Main content -->
@@ -21,18 +23,7 @@
             <form role="form" method="post">
               <div class="box-body">
                 <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Akun</label>
-                      <select class="form-control theSelect" name="akun" id="akun">
-                        <option value="0">- Pilih Akun -</option>
-                        <?php foreach($list_akun as $la){ ?>
-                        <option <?= $akun === $la->id_akun ? "selected ": ""?> value="<?=$la->id_akun?>"> <?=$la->id_akun?> - <?=$la->nama_akun?></option>
-                        <?php } ?>
-                      </select>   
-                    </div>
-                  </div>
-                  <div class="col-md-8">
+                  <div class="col-md-12">
                     <div class="form-group">
                       <div class="col-md-6">
                         <label for="exampleInputPassword1">Tanggal Awal</label>
@@ -102,11 +93,44 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <?php foreach($list_data as $dd): ?>
-                      <td><?=$no++?></td>
-                      <td><?= $dd->kode_transaksi.$dd->no_transaksi?></td>
-                      <td><?= mediumdate_indo($dd->tgl_transaksi)?></td>
+                  <?php foreach($list_datafilter as $dd){?>
+                    <?php 
+                    $kode_transaksi = $dd->kode_transaksi;
+                    $no_transaksi = $dd->no_transaksi;
+                    $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $akun, $tgl_awal, $tgl_akhir); 
+
+                    foreach ($rinci_data as $rd) { ?>
+                    <tr>
+                      <td><?= $no++ ?></td>
+                      <td><a style="color:black" target="_blank" href="<?=base_url('transaksi/cetak/'.$rd->kode_transaksi.$rd->no_transaksi)?>"><?= $rd->kode_transaksi.$rd->no_transaksi?></a></td>
+                      <td><?=mediumdate_indo($rd->tgl_transaksi)?></td>
+                      <td><?=$rd->id_akun." - ".$rd->nama_akun?> <?=$rd->keterangan?></td>
+                      <td class="text-center">
+                        <?php 
+                        if($rd->jenis_transaksi == "Debet"){
+                          $totdebet+=$rd->debet;
+                          echo "Rp. ".number_format($rd->debet,2,",",".");
+                        }else{
+                          echo "-";
+                        }
+                        ?>
+                      </td>
+                      <td class="text-center">
+                        <?php 
+                        if($rd->jenis_transaksi == "Kredit"){
+                          $totkredit+=$rd->kredit;
+                          echo "Rp. ".number_format($rd->kredit,2,",",".");
+                        }else{
+                          echo "-";
+                        }
+                        ?>
+                      </td>
+                    </tr>
+                    <?php } ?>
+                    <tr>
+                      <td></td>
+                      <td><a style="color:black" target="_blank" href="<?=base_url('transaksi/cetak/'.$dd->kode_transaksi.$dd->no_transaksi)?>"><?= $dd->kode_transaksi.$dd->no_transaksi?></a></td>
+                      <td><?=mediumdate_indo($dd->tgl_transaksi)?></td>
                       <td><?=$dd->id_akun." - ".$dd->nama_akun?> <?=$dd->keterangan?></td>
                       <td class="text-center">
                         <?php 
@@ -128,43 +152,12 @@
                         }
                         ?>
                       </td>
-                        <!-- <th>
-                        <?php 
-                        if($dd->nama_akun === "Kas" || $dd->nama_akun === "Bank"){
-                          $debet+=$dd->debet;
-                          $kredit+=$dd->kredit;
-                          $saldo = $debet-$kredit;
-                          echo "Rp. ".number_format($saldo,2,",",".");
-                        }else{
-                          echo " ";
-                        }
-                        ?>  
-                        </th>        -->
                     </tr>
-
-                <?php endforeach;?>
+                  <?php }?>
                 <?php }else { ?>
                       <td colspan="7" align="center"><strong>Data Kosong</strong></td>
                 <?php } ?>
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <!-- <th class="text-center">
-                      <?php
-                      echo "Rp. ".number_format($totdebet,2,",",".");
-                      ?>
-                    </th>
-                    <th class="text-center">
-                    <?php
-                      echo "Rp. ".number_format($totkredit,2,",",".");
-                      ?>
-                    </th> -->
-                  </tr>
-                  </tfoot>
                 </table>
               </div>
             <!-- /Tabel -->

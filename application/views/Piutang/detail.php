@@ -74,8 +74,8 @@
                       <td><?=$dd->nama_akun." ".$dd->keterangan?></td>
                       <td class="text-center">
                           <?php 
-                          if($dd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($dd->debet)." ,-";
+                          if($dd->jenis_transaksi == "Kredit"){
+                            echo "Rp. ".number_format($dd->kredit)." ,-";
                           }else{
                             echo "-";
                           }
@@ -83,8 +83,8 @@
                         </td>
                         <td class="text-center">
                           <?php 
-                          if($dd->jenis_transaksi == "Kredit"){
-                            echo "Rp. ".number_format($dd->kredit)." ,-";
+                          if($dd->jenis_transaksi == "Debet"){
+                            echo "Rp. ".number_format($dd->debet)." ,-";
                           }else{
                             echo "-";
                           }
@@ -130,35 +130,6 @@ $(document).ready(function() {
          paging   : true,
          info   : true,
          responsive: true,
-         
-
-        dom:
-      "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
-      "<'row'<'col-sm-12'tr>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        buttons: [{
-            extend: 'print',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          {
-            extend: 'pdf',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          {
-            extend: 'excel',
-            footer: true,
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            }
-          },
-          'colvis'
-        ],
         
     } );
     

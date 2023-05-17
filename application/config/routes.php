@@ -90,16 +90,23 @@ $route['Datasaldoawal'] = 'akun/datasaldoawal';
 
 $route['Datafaq'] = 'faq/datafaq';
 
-$route['tambahtransaksi'] = 'transaksi/kategori';
+$route['tambahtransaksi/(:any)'] = 'transaksi/kategori/$2';
 $route['Datatransaksi'] = 'transaksi/datatransaksi';
 
-$route['data/(:any)'] = 'transaksi/laporantransaksi';
+$route['laporantransaksi/(:any)'] = 'transaksi/kategori_sumber/$2';
+$route['laporan/(:any)'] = 'transaksi/halamanlaporan';
 
-$route['jurnal/(:any)'] = 'transaksi/jurnal/$2';
+$route['datalaporan/(:any)/(:any)'] = 'transaksi/halamanlaporan/$2/$3';
+
+$route['kategoribank'] = 'transaksi/kategori_bank';
+
+$route['data/(:any)/(:any)'] = 'transaksi/laporantransaksi/$2/$3';
+$route['jurnal/(:any)/(:any)'] = 'transaksi/jurnal/$2/$3';
+$route['bukubesar/(:any)/(:any)'] = 'transaksi/bukubesar/$2/$3';
+
 $route['jurnalexcel/(:any)'] = 'transaksi/jurnalexcel/$2';
 $route['jurnalexcel/(:any)/(:num)/(:num)/(:num)'] = 'transaksi/jurnalexcel/$2/$3/$4/$5';
 
-$route['bukubesar/(:any)'] = 'transaksi/bukubesar';
 $route['bukubesarexcel/(:any)'] = 'transaksi/bukubesarexcel';
 $route['bukubesarexcel/(:any)/(:num)/(:num)/(:num)'] = 'transaksi/bukubesarexcel/$2/$3/$4/$5';
 

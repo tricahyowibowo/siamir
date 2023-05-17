@@ -37,10 +37,13 @@ class Transaksi extends BaseController
     public function datatransaksi($id){
 
         $id = $this->uri->segment(3);
+
         $data['role'] = $this->global ['role'];
 
         $this->global['pageTitle'] = 'Data Transaksi';
         $data['list_data'] = $this->transaksi_model->Gettransaksi($id);
+        $data['list_akun'] = $this->crud_model->tampil_data('tbl_dafakun');
+
         $this->loadViews("transaksi/data", $this->global, $data , NULL);
     }
 
@@ -56,14 +59,17 @@ class Transaksi extends BaseController
         $this->loadViews("transaksi/edit", $this->global, $data , NULL);
     }
 
-    public function kategori($role){
+    public function kategori($page){
 
-        $role = $this->uri->segment(3);
-        $this->global['pageTitle'] = 'Kategori';
+        $page = $this->uri->segment(2);
+
+        var_dump($page);
+        $this->global['pageTitle'] = 'Kategori ';
 
         $data = array(
-            'list_bank'      => $this->master_model->getDataSumber($role),
-            'list_kategori'  => $this->master_model->getDataKategori($role),
+            'list_bank'      => $this->master_model->getDataSumber($page),
+            'list_kategori'  => $this->master_model->getDataKategori($page),
+            'page'  => $page,
             );
 
         $this->loadViews("transaksi/kategori", $this->global, $data , NULL);
@@ -123,8 +129,11 @@ class Transaksi extends BaseController
             $nama_sumber = $s->nama_akun;
         }
 
-        $cek=substr($nama_sumber, 0, 4);
+        $kas=substr($nama_sumber, 0, 3);
 
+        
+
+        $cek=substr($nama_sumber, 0, 4);
         // if($cek === "BANK"){
         //     $kode1= substr($nama_sumber, 0, 1);
         //     $kode2= substr($nama_sumber, 5, 1);
@@ -140,17 +149,27 @@ class Transaksi extends BaseController
         case "BANK":
             $kode1= substr($nama_sumber, 0, 1);
             $kode2= substr($nama_sumber, 5, 1);
+
+            $cekbank = substr($nama_sumber, 5, 5);
+
+            if($cekbank == "NIAGA"){
+                $kode3= substr($nama_sumber,11, 1);
+            }else{
+                $kode3= substr($nama_sumber,13, 1);
+            }
             break;
         case "DEPO":
             $kode1= substr($nama_sumber, 0, 1);
             $kode2= substr($nama_sumber, 1, 1);
+            $kode3= substr($nama_sumber, 2, 1);
             break;
         default:
             $kode1= substr($nama_sumber, 0, 1);
-            $kode2= substr($nama_sumber, 4, 1);
+            $kode2= substr($nama_sumber, 1, 1);
+            $kode3= substr($nama_sumber, 4, 1);
         }
 
-        $kode_sumber = $kode1.$kode2;
+        $kode_sumber = $kode1.$kode2.$kode3;
 
         $tanggal = strftime('%m%Y', strtotime($tgl_transaksi));
         $bln = substr($tanggal, 0, 2);
@@ -290,16 +309,122 @@ class Transaksi extends BaseController
 		}
 	}
 
+    public function tambahdataexcel(){
+        $this->global['pageTitle'] = 'Tambah bahan';
+
+        $this->loadViews("transaksi/import_excel", $this->global , NULL);
+    }
+
+    public function format_excel(){
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="format input data transaksi.xlsx"');
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setCellValue('A1', 'Kode Transaksi');
+		$sheet->setCellValue('B1', 'No Transaksi');
+		$sheet->setCellValue('C1', 'Tanggal Transaksi');
+		$sheet->setCellValue('D1', 'Jenis Transaksi');
+		$sheet->setCellValue('E1', 'akun');
+		$sheet->setCellValue('F1', 'Kategori');
+		$sheet->setCellValue('G1', 'Nominal');
+		$sheet->setCellValue('H1', 'Keterangan');
+
+
+		$writer = new Xlsx($spreadsheet);
+		$writer->save("php://output");
+	}
+
+    public function spreadsheet_import(){
+		$upload_file=$_FILES['upload_file']['name'];
+		$extension=pathinfo($upload_file,PATHINFO_EXTENSION);
+		if($extension=='csv')
+		{
+			$reader= new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+		} else if($extension=='xls')
+		{
+			$reader= new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+		} else
+		{
+			$reader= new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+		}
+		$spreadsheet=$reader->load($_FILES['upload_file']['tmp_name']);
+		$sheetdata=$spreadsheet->getActiveSheet()->toArray();
+		$sheetcount=count($sheetdata);
+		if($sheetcount>1)
+		{
+			$data=array();
+			for ($i=1; $i < $sheetcount; $i++) { 
+				$kode_transaksi=$sheetdata[$i][0];
+				$no_transaksi=$sheetdata[$i][1];
+				$tgl_transaksi=$sheetdata[$i][2];
+                $jenis_transaksi=$sheetdata[$i][3];
+				$akun=$sheetdata[$i][4];
+				$kategori_id=$sheetdata[$i][5];
+                $nominal_transaksi=$sheetdata[$i][6];
+				$keterangan=$sheetdata[$i][7];
+
+				$data[]=array(
+					'kode_transaksi'=>$kode_transaksi,
+					'no_transaksi'=>$no_transaksi,
+					'tgl_transaksi'=>$tgl_transaksi,
+                    'jenis_transaksi'=>$jenis_transaksi,
+					'akun'=>$akun,
+                    'kategori_id'=>$kategori_id,
+					'nominal_transaksi'=>$nominal_transaksi,
+					'keterangan'=>$keterangan,
+					'user_id'=>$this->global ['userId'],
+				);
+			}
+			$inserdata=$this->crud_model->save_batch($data);
+			if($inserdata)
+			{
+				$this->session->set_flashdata('msg_berhasil','Data Barang Berhasil Ditambahkan');
+				redirect('transaksi/tambahdataexcel');
+			} else {
+				$this->session->set_flashdata('message','<div class="alert alert-danger">Data Not uploaded. Please Try Again.</div>');
+				redirect('transaksi/tambahdataexcel');
+			}
+		}
+	}
+
     public function delete($kode_transaksi){
       $where = array('kode_transaksi' => $kode_transaksi);
       $this->crud_model->delete($where , 'tbl_transaksi');
       redirect(base_url('transaksi'));
     }
 
+    public function kategori_sumber(){
+
+
+        $this->global['pageTitle'] = 'Data Transaksi';
+        $page = $this->uri->segment(2);
+
+        $data['list_bank'] = $this->transaksi_model->GetAkunByPage($page);
+        $data['page'] = $page;
+
+        $this->loadViews("transaksi/kategori_sumber", $this->global, $data , NULL);
+    }
+
+    public function halamanlaporan(){
+        $filterakun = $this->input->post('bank');
+
+        if(is_null($filterakun)){
+            $filterakun = $this->uri->segment(3);
+        }
+
+        $page = $this->uri->segment(2);
+        $this->global['pageTitle'] = 'Laporan '.$page;
+
+        $data['page'] = $page;
+        $data['filter'] = $filterakun;
+        $this->loadViews("laporan/halamanlaporan", $this->global, $data , $data, NULL);
+    }
+
     public function laporantransaksi(){
         $data = $this->data();
         $page = $this->uri->segment(2);
         $this->global['pageTitle'] = 'Laporan '.$page;
+
         $this->loadViews("laporan/data", $this->global, $data , $data, NULL);
     }
 
