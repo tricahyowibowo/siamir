@@ -32,9 +32,6 @@ class BaseController extends CI_Controller {
 		);
 		$pecahkan = explode('-', $tanggal);
 		
-		// variabel pecahkan 0 = tahun
-		// variabel pecahkan 1 = bulan
-		// variabel pecahkan 2 = tanggal
 	 
 		return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
 	}
@@ -42,56 +39,29 @@ class BaseController extends CI_Controller {
 	function saldoawal(){
 		$page = $this->uri->segment(2);
 		$akun = $this->uri->segment(3);
-
-		var_dump($akun);
         $tgl_akhir = $this->input->post('tgl_awal');
 
-        $saldoawal = $this->transaksi_model->Getsaldoawal($akun, $tgl_akhir);
-        $totaltransaksi = $this->transaksi_model->GettotTransaksi($akun, $tgl_akhir);
+		// if(is_null($page) && is_null($akun)){
+		// 	$page = $this->uri->segment(3);
+		// 	$akun = $this->uri->segment(4);
+		// }
+
+		if(is_null($tgl_akhir)){
+			$tgl = "01";
+			$bln = date("m");
+			$thn = date("Y");
+
+			$tgl_akhir = $thn.'-'.$bln.'-'.$tgl;
+		}
+
+
+        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $akun, $tgl_akhir);
 
 		foreach($saldoawal as $s){
-            $saldoawal = $s->debet - $s->kredit;
+            $totalsaldo = $s->debet - $s->kredit;
         }
-
-		foreach($totaltransaksi as $s){
-            $saldotransaksi = $s->debet - $s->kredit;
-        }
-
-
-		$totalsaldo = $saldoawal+$saldotransaksi;
-
-		var_dump($saldoawal);
-		var_dump($saldotransaksi);
 
 		return $totalsaldo;
-    }
-
-	function saldoawalbukubesar(){
-		$page = $this->uri->segment(3);
-        $tgl_awal = $this->uri->segment(4);
-
-		if (isset($tgl_akhir)){
-			$bln = substr($tgl_akhir, 5, 2);
-		}else{
-			$bln = date('m');
-		}
-
-		if ($bln != 1){
-			$bln = $bln - 1;
-		}else{
-			$bln = 12;
-		}
-
-        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_awal);
-
-		$saldo = 0;
-
-      	foreach($saldoawal as $s){
-            $totalsaldo = $s->debet-$s->kredit;
-			$saldoakhir = $saldo + $totalsaldo;
-        }
-		return $saldoakhir;
-
     }
 
 	function data(){
@@ -101,7 +71,7 @@ class BaseController extends CI_Controller {
         $akun = $this->input->post('akun'); 
         $tgl_awal = $this->input->post('tgl_awal'); 
         $tgl_akhir = $this->input->post('tgl_akhir');
-		$filter_akun = $this->transaksi_model->Getfilterakun($filterakun, $tgl_awal, $tgl_akhir);
+		$filter_akun = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal, $tgl_akhir);
 		
 
 		$cek = $this->uri->segment(1);
@@ -118,16 +88,6 @@ class BaseController extends CI_Controller {
 				$list_data = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
 			break;
 		}
-
-		// $total = $this->transaksi_model->GettotalTransaksi($page, $akun, $tgl_awal,$tgl_akhir);
-		// foreach ($total as $t){
-		// 	$debet = $t->debet;
-		// 	$kredit = $t->kredit;
-		// }
-		// var_dump($saldo);
-
-		// var_dump($debet);
-		// var_dump($kredit);
 
 
 		if (is_null($tgl_awal) && is_null($tgl_akhir)){

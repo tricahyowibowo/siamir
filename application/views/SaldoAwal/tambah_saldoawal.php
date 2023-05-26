@@ -42,28 +42,17 @@
                       <div class="box-body">
 
                         <div class="form-group">
-                          <label for="kategori" class="col-sm-4 control-label">Kategori :</label>
-                          <div class="col-sm-6">
-                            <select class="form-control required" name="kategori">
-                              <option value="">-- Pilih Kategori--</option>
-                              <?php foreach($list_kategori as $l){ ?>
-                              <option value="<?=$l->id_kategori?>"><?=$l->nama_kategori?></option>
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="form-group">
                           <label for="akun" class="col-sm-4 control-label">Akun :</label>
                           <div class="col-sm-8">
                             <select class="form-control form" name="akun" id="akun">
-                              <option value="">-- Pilih Akun--</option>
                               <?php foreach($list_akun as $b){ ?>
+                              <option value="">-- Pilih Akun--</option>
                               <option value="<?=$b->id_akun?>"><?=$b->nama_akun?></option>
                               <?php } ?>
                             </select>
                           </div>
                         </div>
+
 
                         <div class="form-group">
                             <label for="saldoawal" class="col-sm-4 control-label" >Saldo Awal :</label>
@@ -102,6 +91,11 @@
   <!-- /.content-wrapper -->
 
   <script>
+$('.karyawan  ').select2({
+  placeholder: 'Pilih karyawan',
+  allowClear: true
+});
+
 $('.form').select2({
   placeholder: 'Pilih akun',
   allowClear: true

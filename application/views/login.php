@@ -102,6 +102,14 @@
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
           <?php echo $success; ?>
         </div>
+      <?php }
+      $warning = $this->session->flashdata('warning');
+      if ($warning) {
+      ?>
+        <div class="alert alert-warning alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <?php echo $warning; ?>
+        </div>
       <?php } ?>
 
       <form action="<?php echo base_url(); ?>loginMe" method="post">

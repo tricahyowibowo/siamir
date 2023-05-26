@@ -113,37 +113,3 @@
         maxView: 4,
       });
   </script>
-
-
-<!-- public function tambahdata()
-    {
-        $this->global['pageTitle'] = 'Tambah Transaksi';
-
-        $id = $this->input->post('kategori');
-        $tgl_transaksi = $this->input->post('tgl_transaksi');
-        $rekening = $this->input->post('rek_id');
-
-
-        $kategori = $this->transaksi_model->cekkategori($id);
-        $rekening = $this->transaksi_model->cekrekening($rekening);
-        $tanggal = strftime('%m', strtotime($tgl_transaksi));
-        $tanggal = substr($tanggal, 1, 1);
-        // $tanggal = $this->transaksi_model->cektanggal();
-        var_dump($tanggal);
-        $cektanggal = $this->transaksi_model->cekkodebytanggal($tanggal);
-        $dariDB = $this->transaksi_model->cekkodetransaksi($id);
-        // var_dump($dariDB);
-        // contoh JRD0004, angka 3 adalah awal pengambilan angka, dan 4 jumlah angka yang diambil
-        $nourut = substr($dariDB, 3, 4);
-        $kode_transaksi = $nourut + 1;
-
-        $data = array(
-            'kategori'       => $kategori,
-            'tgl_transaksi'       => $tgl_transaksi,
-            'rekening'       => $rekening,
-            'tanggal'       => $tanggal,
-            'kode_transaksi' => $kode_transaksi,
-            );
-
-        $this->loadViews("transaksi/tambah_transaksi", $this->global, $data , NULL);
-    } -->

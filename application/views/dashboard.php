@@ -29,6 +29,9 @@
     <section class="content">
       <!-- Info boxes -->
       <div class="row" style="padding-top: 20px;">
+        <div class="col-md-6">
+          <canvas id="myChart"></canvas>
+        </div>
         <?php foreach ($datachart as $data) : ?>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <div class="info-box">
@@ -50,8 +53,6 @@
       <div class="row">
         <div class="col-md-6">
           <canvas id="myChart"></canvas>
-        </div>
-        <div class="col-md-6">
         </div>
       </div>
       <!-- CHART -->

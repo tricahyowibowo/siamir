@@ -54,11 +54,11 @@ class Login extends CI_Controller{
             $password = $this->input->post('password');
             
             $result = $this->login_model->loginMe($username, $password);
-            
+          
             if(count($result) > 0)
             {
                 foreach ($result as $res)
-                {
+                if ($res->isLogin != 1){
                     $sessionArray = array('userId'=>$res->userId,                    
                                             'role'=>$res->roleId,
                                             'roleText'=>$res->role,
@@ -68,20 +68,22 @@ class Login extends CI_Controller{
                                     
                     $this->session->set_userdata($sessionArray);
 
-                    $where = array('userId' => $res->userId);
-  
-                    $data = array(
-                        'isLogin' => 1,
-                    );
-            
+                    $where =  array('userId'=>$res->userId);
+                    $data['isLogin'] = 1;
+                    
                     $this->crud_model->update($where,$data,'tbl_users');
 
                     redirect('/dashboard');
+                }else{
+                    $this->session->set_flashdata('warning', '<b>akun anda terkunci,</b> anda hanya dapat login max <b>1 perangkat</b>, jika bukan anda silahkan hubungi IT');
+                
+                    redirect('/login');
                 }
             }
             else
             {
                 $this->session->set_flashdata('error', 'username or password mismatch');
+                
                 redirect('/login');
             }
         }

@@ -45,7 +45,6 @@ class Akun extends BaseController
 
         $data['list_akun'] = $this->crud_model->tampil_data('tbl_dafakun');
 
-        $kategori       = $this->input->post('kategori');
         $akun       = $this->input->post('akun');
         $saldoawal  = $this->input->post('saldoawal');
         $tgl_transaksi  = $this->input->post('tgl_transaksi');
@@ -57,7 +56,7 @@ class Akun extends BaseController
             'tgl_transaksi'     => $tgl_transaksi,
             'jenis_transaksi'   => "Debet",
             'kode_transaksi'    => "SA",
-            'kategori_id'       => $kategori,
+            'kategori_id'       => "6",
             'akun'              => $akun,
             'nominal_transaksi' => $saldoawal,
             'user_id'           => $user_id
@@ -67,6 +66,49 @@ class Akun extends BaseController
 
         $this->session->set_flashdata('msg_berhasil','Saldo Awal Berhasil Ditambahkan');
         redirect('Datasaldoawal');
+	}
+
+    public function datasaldoawalkaryawan(){
+        $this->global['pageTitle'] = 'Data Saldo Awal';
+        $data['list_data'] = $this->master_model->getDataSaldoAwalKaryawan();
+        $this->loadViews("SaldoAwal/dataKaryawan", $this->global, $data , NULL);
+    }
+
+    public function tambahsaldoawalkaryawan(){
+        $this->global['pageTitle'] = 'Tambah Akun';
+
+        $page = $this->uri->segment(2);
+
+        $data['list_akun'] = $this->crud_model->tampil_data('tbl_dafakun');
+        $data['list_karyawan'] = $this->crud_model->tampil_data('tbl_karyawan');
+        $data['page'] = $page;
+
+        $this->loadViews("SaldoAwal/tambah_saldoawalkaryawan", $this->global , $data, NULL);
+    }
+
+    public function simpansaldoawalkaryawan(){
+        $karyawan       = $this->input->post('keterangan');
+        $saldoawal  = $this->input->post('saldoawal');
+        $tgl_transaksi  = $this->input->post('tgl_transaksi');
+        $user_id    = $this->global ['userId'];
+
+
+
+        $data = array(
+            'tgl_transaksi'     => $tgl_transaksi,
+            'jenis_transaksi'   => "Kredit",
+            'kode_transaksi'    => "SA",
+            'kategori_id'       => "6",
+            'akun'              => "11202",
+            'keterangan'        => $karyawan,
+            'nominal_transaksi' => $saldoawal,
+            'user_id'           => $user_id
+        );
+
+        $this->crud_model->input($data,'tbl_transaksi');
+
+        $this->session->set_flashdata('msg_berhasil','Saldo Awal Berhasil Ditambahkan');
+        redirect('Datasaldoawalkaryawan');
 	}
 
     public function dataakun(){

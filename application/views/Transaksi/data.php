@@ -91,7 +91,7 @@
                           ?>
                         </td>
                         <?php
-                        if($role == ROLE_ADMIN || $role == ROLE_KABAG || $role == ROLE_KAS){?>
+                        if($role == ROLE_ADMIN || $role == ROLE_KABAG){?>
                         <td>
                           <a href="<?=base_url('transaksi/edittransaksi/'.$dd->no_transaksi)?>" type="button" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
                         </td>

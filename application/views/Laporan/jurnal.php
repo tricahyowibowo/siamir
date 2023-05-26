@@ -62,7 +62,7 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><i class="fa fa-table" aria-hidden="true"></i> Data Jurnal <?php echo $page?> </h3>
-              <a href="<?=site_url('transaksi/jurnalexcel/'.$page.'/'.$akun.'/'.$tgl_awal.'/'.$tgl_akhir)?>" type="button" class="btn btn-success pull-right"><i class="fa fa-download"></i> <span> Export Excel</span></a>
+              <a href="<?=site_url('transaksi/jurnalexcel/'.$page.'/'.$filter.'/'.$tgl_awal.'/'.$tgl_akhir)?>" type="button" class="btn btn-success pull-right"><i class="fa fa-download"></i> <span> Export Excel</span></a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

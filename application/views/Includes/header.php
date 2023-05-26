@@ -120,6 +120,18 @@
             if($role == ROLE_ADMIN || $role == ROLE_KABAG){?>
             <li class="treeview">
               <a href="#">
+                <i class="fa  fa-list"></i> <span>Saldo Awal</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="<?php echo base_url(); ?>Datasaldoawal"><i class="fa fa-circle-o"></i> Saldo Awal Akun</a></li>
+                <li><a href="<?php echo base_url(); ?>Datasaldoawalkaryawan"><i class="fa fa-circle-o"></i> Saldo Awal Karyawan</a></li>
+              </ul>
+            </li>            
+            <li class="treeview">
+              <a href="#">
                 <i class="fa  fa-list"></i> <span>Master Data</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
@@ -159,7 +171,7 @@
             <li>
               <a href="<?php echo base_url().'transaksi/tambahdataexcel' ?>">
                 <i class="fa fa-plus"></i>
-                <span>Tambah Transaksi via CSV</span>
+                <span>Tambah Transaksi via Excel</span>
               </a>
             </li>
             <?php } ?>
@@ -185,7 +197,7 @@
             </li>
             <?php } ?>
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER || $role == ROLE_BANK || $role == ROLE_KABAG || $role == ROLE_KAS)
+            if($role == ROLE_ADMIN || $role == ROLE_MANAGER || $role == ROLE_BANK || $role == ROLE_KABAG)
             {
             ?>
             <li class="treeview">

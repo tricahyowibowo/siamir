@@ -63,7 +63,6 @@ class Transaksi extends BaseController
 
         $page = $this->uri->segment(2);
 
-        var_dump($page);
         $this->global['pageTitle'] = 'Kategori ';
 
         $data = array(
@@ -433,11 +432,11 @@ class Transaksi extends BaseController
         $cek = substr($id, 0, 2);
 
         if($cek === "PK"){
-        $kode_transaksi = substr($id, 0, 2);
-        $no_transaksi = substr($id, 2, 7);
+        $kode_transaksi = substr($id, 0, 3);
+        $no_transaksi = substr($id, 3, 7);
         }else{
-        $kode_transaksi = substr($id, 0, 4);
-        $no_transaksi = substr($id, 4, 7);  
+        $kode_transaksi = substr($id, 0, 5);
+        $no_transaksi = substr($id, 5, 7);  
         }
         // var_dump($kode_transaksi);
         // var_dump($no_transaksi);
@@ -618,18 +617,35 @@ class Transaksi extends BaseController
         $this->loadViews("laporan/neraca", $this->global, $data , NULL);
     }
 // LAPORAN EXCEL//
+
     //JURNAL----//
     public function jurnalexcel(){
-    $page = $this->uri->segment(3);
-    $akun = $this->uri->segment(4);
-    $tgl_awal = $this->uri->segment(5); 
-    $tgl_akhir = $this->uri->segment(6);
-    $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
-    $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
-    $periode = strftime("%B", strtotime(date("Y/m/d")));
-
-    // Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
-    $transaksi = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
+        $page = $this->uri->segment(3);
+        $filterakun = $this->uri->segment(4);
+        $tgl_awal = $this->uri->segment(5); 
+        $tgl_akhir = $this->uri->segment(6);
+        $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
+        $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
+        $periode = strftime("%B", strtotime(date("Y/m/d")));
+    
+    
+        $transaksi = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal,$tgl_akhir);
+        // $transaksi = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
+    
+        if(is_null($tgl_awal)){
+            $tgl = "01";
+            $bln = date("m");
+            $thn = date("Y");
+    
+            $tgl_awal = $thn.'-'.$bln.'-'.$tgl;
+        };
+    
+    
+        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $filterakun, $tgl_awal);
+    
+        foreach($saldoawal as $s){
+            $saldoawal = $s->debet - $s->kredit;
+        };
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
@@ -708,57 +724,76 @@ class Transaksi extends BaseController
 
     $no = 1; // Untuk penomoran tabel, di awal set dengan 1
     $numrow = 6; // Set baris pertama untuk isi tabel adalah baris ke 4
+    $numrow2 = 7;
     $debet = 0;
     $kredit = 0;
     $saldo = 0;
 
 
-    foreach($transaksi as $dd){ // Lakukan looping pada variabel siswa
-        $sheet->setCellValue('B'.$numrow, $no);
-        $sheet->setCellValue('C'.$numrow, $dd->kode_transaksi.$dd->no_transaksi);
-        $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
-        $sheet->setCellValue('E'.$numrow, $dd->id_akun);
-        $sheet->setCellValue('F'.$numrow, $dd->nama_akun." ".$dd->keterangan);
-        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->debet,2,",","."));
-        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->kredit,2,",","."));
+    foreach($transaksi as $dd){ // Lakukan looping
 
+        $kode_transaksi = $dd->kode_transaksi;
+        $no_transaksi = $dd->no_transaksi;
 
-        $debet = $debet + $dd->debet;
-        $kredit = $kredit + $dd->kredit;
-        $saldo = $saldo+($dd->debet-$dd->kredit);
+        $detailtransaksi = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filterakun, $tgl_awal, $tgl_akhir);
 
-        $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo,2,",","."));
+        foreach($detailtransaksi as $dt){               
+            $sheet->setCellValue('B'.$numrow, $no);
+            $sheet->setCellValue('C'.$numrow, $dt->kode_transaksi.$dt->no_transaksi);
+            $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dt->tgl_transaksi)));
+            $sheet->setCellValue('E'.$numrow, $dt->id_akun);
+            $sheet->setCellValue('F'.$numrow, $dt->nama_akun." ".$dt->keterangan);
+            $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dt->debet,2,",","."));
+            $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dt->kredit,2,",","."));
+            
 
+            $sheet->getColumnDimension('B')->setAutoSize(true);
+            $sheet->getColumnDimension('C')->setAutoSize(true);
+            $sheet->getColumnDimension('D')->setAutoSize(true);
+            $sheet->getColumnDimension('E')->setWidth(40, 'pt');
+            $sheet->getColumnDimension('F')->setAutoSize(true);
+            $sheet->getColumnDimension('G')->setAutoSize(true);
+            $sheet->getColumnDimension('H')->setAutoSize(true);
 
-        $sheet->getColumnDimension('B')->setAutoSize(true);
-        $sheet->getColumnDimension('C')->setAutoSize(true);
-        $sheet->getColumnDimension('D')->setAutoSize(true);
-        $sheet->getColumnDimension('E')->setWidth(40, 'pt');
-        $sheet->getColumnDimension('F')->setAutoSize(true);
-        $sheet->getColumnDimension('G')->setAutoSize(true);
-        $sheet->getColumnDimension('H')->setAutoSize(true);
-        $sheet->getColumnDimension('I')->setAutoSize(true);
+            // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+            $sheet->getStyle('B'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
 
-        
-        // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
-        $sheet->getStyle('B'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
-        $sheet->getStyle('I'.$numrow)->applyFromArray($style_row);
-        
+            $sheet->setCellValue('B'.$numrow2, $no);
+            $sheet->setCellValue('C'.$numrow2, $dd->kode_transaksi.$dd->no_transaksi);
+            $sheet->setCellValue('D'.$numrow2, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
+            $sheet->setCellValue('E'.$numrow2, $dd->id_akun);
+            $sheet->setCellValue('F'.$numrow2, $dd->nama_akun." ".$dd->keterangan);
+            $sheet->setCellValue('G'.$numrow2, "Rp. ".number_format($dd->debet,2,",","."));
+            $sheet->setCellValue('H'.$numrow2, "Rp. ".number_format($dd->kredit,2,",","."));
+
+            $sheet->getColumnDimension('B')->setAutoSize(true);
+            $sheet->getColumnDimension('C')->setAutoSize(true);
+            $sheet->getColumnDimension('D')->setAutoSize(true);
+            $sheet->getColumnDimension('E')->setWidth(40, 'pt');
+            $sheet->getColumnDimension('F')->setAutoSize(true);
+            $sheet->getColumnDimension('G')->setAutoSize(true);
+            $sheet->getColumnDimension('H')->setAutoSize(true);
+
+            // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+            $sheet->getStyle('B'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('C'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('D'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('E'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('F'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('G'.$numrow2)->applyFromArray($style_row);
+            $sheet->getStyle('H'.$numrow2)->applyFromArray($style_row);
+        };
+
         $no++; // Tambah 1 setiap kali looping
         $numrow++; // Tambah 1 setiap kali looping
-    }
-    $sheet->setCellValue('F'.$numrow, 'Total Akhir');
-    $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet,2,",","."));
-    $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit,2,",","."));
-    $sheet->getStyle('F'.$numrow)->applyFromArray($styleRight);
-    $sheet->getStyle('G'.$numrow)->applyFromArray($style_col);
-    $sheet->getStyle('H'.$numrow)->applyFromArray($style_col);
+        $numrow2++; // Tambah 1 setiap kali looping
+    };
 
     $writer = new Xlsx($spreadsheet);
     header('Content-Type: application/vnd.ms-excel');
@@ -778,15 +813,31 @@ class Transaksi extends BaseController
     //BUKU BESAR---//
     public function bukubesarexcel(){
     $page = $this->uri->segment(3);
-    $tgl_awal = $this->uri->segment(4); 
-    $tgl_akhir = $this->uri->segment(5);
-    $akun = $this->uri->segment(6);
+    $filterakun = $this->uri->segment(4);
+    $tgl_awal = $this->uri->segment(5); 
+    $tgl_akhir = $this->uri->segment(6);
     $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
     $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
     $periode = strftime("%B", strtotime(date("Y/m/d")));
 
-    // Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
-    $transaksi = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
+
+    $transaksi = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal,$tgl_akhir);
+    // $transaksi = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
+
+    if(is_null($tgl_awal)){
+        $tgl = "01";
+        $bln = date("m");
+        $thn = date("Y");
+
+        $tgl_awal = $thn.'-'.$bln.'-'.$tgl;
+    };
+
+
+    $saldoawal = $this->transaksi_model->Getsaldoawal($page, $filterakun, $tgl_awal);
+
+    foreach($saldoawal as $s){
+        $saldoawal = $s->debet - $s->kredit;
+    };
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
@@ -844,28 +895,6 @@ class Transaksi extends BaseController
 
     $sheet->mergeCells('B3:D3');
 
-    // if (isset($tgl_awal)){
-    //     $bln = substr($tgl_awal, 5, 2);
-    // }else{
-    //     $bln = date('m');
-    // }
-
-    // if ($bln != 1){
-    //     $bln = $bln - 1;
-    // }else{
-    //     $bln = 12;
-    // }
-
-    // $saldoawal = $this->transaksi_model->Getsaldoawal($page, $bln, $tgl_awal);
-
-    // $saldo = 0;
-
-    //   foreach($saldoawal as $s){
-    //     $totalsaldo = $s->debet-$s->kredit;
-    //     $saldoawal = $saldo + $totalsaldo;
-    // }
-    $saldoawal = $this->saldoawalbukubesar();
-
     $sheet->setCellValue('B4', 'Saldo Awal');
     $sheet->setCellValue('I4', "Rp. ".number_format($saldoawal,2,",","."));
     $sheet->mergeCells('B4:H4');
@@ -898,18 +927,26 @@ class Transaksi extends BaseController
     $saldo = 0;
     $saldo = $saldo + $saldoawal;
 
-    foreach($transaksi as $dd){ // Lakukan looping pada variabel siswa
-        $sheet->setCellValue('B'.$numrow, $no);
-        $sheet->setCellValue('C'.$numrow, $dd->kode_transaksi.$dd->no_transaksi);
-        $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
-        $sheet->setCellValue('E'.$numrow, $dd->id_akun);
-        $sheet->setCellValue('F'.$numrow, $dd->nama_akun." ".$dd->keterangan);
-        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dd->kredit,2,",","."));
-        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dd->debet,2,",","."));
+    foreach($transaksi as $dd){ // Lakukan looping
 
-        $debet = $debet + $dd->debet;
-        $kredit = $kredit + $dd->kredit;
-        $saldo = $saldo+($dd->kredit-$dd->debet);
+        $kode_transaksi = $dd->kode_transaksi;
+        $no_transaksi = $dd->no_transaksi;
+
+        $detailtransaksi = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filterakun, $tgl_awal, $tgl_akhir);
+
+        foreach($detailtransaksi as $dt){               
+        $sheet->setCellValue('B'.$numrow, $no);
+        $sheet->setCellValue('C'.$numrow, $dt->kode_transaksi.$dt->no_transaksi);
+        $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dt->tgl_transaksi)));
+        $sheet->setCellValue('E'.$numrow, $dt->id_akun);
+        $sheet->setCellValue('F'.$numrow, $dt->nama_akun." ".$dt->keterangan);
+        $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dt->kredit,2,",","."));
+        $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dt->debet,2,",","."));
+        };
+
+        $debet = $debet + $dt->debet;
+        $kredit = $kredit + $dt->kredit;
+        $saldo = $saldo+($dt->kredit-$dt->debet);
 
         $sheet->setCellValue('I'.$numrow, "Rp. ".number_format($saldo,2,",","."));
 
@@ -934,7 +971,8 @@ class Transaksi extends BaseController
 
         $no++; // Tambah 1 setiap kali looping
         $numrow++; // Tambah 1 setiap kali looping
-    }
+    };
+
     $sheet->setCellValue('F'.$numrow, 'Total Akhir');
     $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($debet,2,",","."));
     $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($kredit,2,",","."));

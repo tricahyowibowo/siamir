@@ -21,7 +21,7 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><i class="fa fa-table" aria-hidden="true"></i> Data Saldo Awal</h3>
-              <a href="<?= base_url('akun/tambahsaldoawal')?>" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Data</a>
+              <a href="<?= base_url('tambahsaldoawalkaryawan')?>" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Data</a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -47,8 +47,7 @@
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Kode Akun</th>
-                    <th>Akun</th>
+                    <th>Nama Karyawan</th>
                     <th>Tanggal</th>
                     <th>Saldo Awal</th>
                   </tr>
@@ -61,8 +60,7 @@
                     
                     <?php foreach($list_data as $dd): ?>
                       <td><?=$no++?></td>
-                      <td><?=$dd->akun?></td>
-                      <td><?=$dd->nama_akun?></td>
+                      <td><?=$dd->nama_karyawan?></td>
                       <td><?=mediumdate_indo($dd->tgl_transaksi)?></td>
                       <td><?php echo "Rp. ".number_format($dd->nominal_transaksi,2,",",".");?></td>
                   </tr>

@@ -19,6 +19,18 @@ class Master_model extends CI_Model
         return $result;
     }
 
+    public function getDataSaldoAwalKaryawan(){
+        $this->db->select('a.kategori_id, a.nominal_transaksi, a.tgl_transaksi, a.keterangan, b.nama_karyawan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_karyawan b','b.nama_karyawan = a.keterangan');
+        $this->db->where('kode_transaksi','SA');
+        $this->db->group_by('a.keterangan');
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
     public function getDataKategori($page){
         $this->db->select('*');
         $this->db->from('tbl_kategori');

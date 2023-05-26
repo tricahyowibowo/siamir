@@ -1,4 +1,4 @@
-  <!-- Content Wrapper. Contains page content -->
+ <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <!-- <section class="content-header">
@@ -16,7 +16,7 @@
               <!-- general form elements -->
             <div class="box box-primary">
               <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Pilih Kategori</h3>
+                <h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Saldo Awal</h3>
               </div>
               <!-- /.box-header -->
               <!-- form start -->
@@ -38,31 +38,35 @@
 
                 <div class="row">
                   <div class="col-md-8">
-                    <form class="form-horizontal" action="<?=base_url('piutang/tambahdata')?>" role="form" method="post">
+                    <form class="form-horizontal" action="<?=base_url('akun/simpansaldoawalkaryawan')?>" role="form" id="addKategori" method="post">
                       <div class="box-body">
 
-
                         <div class="form-group">
-                          <label for="kategori" class="col-sm-4 control-label">Kategori :</label>
-                          <div class="col-sm-6">
-                            <select class="form-control" name="kategori">
-                              <?php 
-                              $id = "5";
-                              foreach ($list_kategori as $lk) {
-                              if ($id === $lk->id_kategori) {?>
-                              <option <?= $id === $lk->id_kategori ? "selected ": ""?> value="<?=$id?>"> <?=$lk->nama_kategori?></option>
-                              <?php } }  ?>
+                        <label for="akun" class="col-sm-4 control-label">Karyawan :</label>
+                          <div class="col-sm-8">
+                            <select class="form-control karyawan" name="keterangan" id="keterangan">
+                                <option value="">-- Pilih Karyawan--</option>
+                                <?php foreach($list_karyawan as $lk){ ?>
+                                <option value="<?=$lk->nama_karyawan?>"><?=$lk->nama_karyawan?></option>
+                              <?php } ?>
                             </select>
                           </div>
                         </div>
 
+
                         <div class="form-group">
-                            <label for="tgl_transaksi" class="col-sm-4 control-label" >Tanggal :</label>
-                              <div class="col-sm-3">
-                              <input type="date" name="tgl_transaksi" id="tgl_transaksi" class="form-control" placeholder="Klik Disini">
+                            <label for="saldoawal" class="col-sm-4 control-label" >Saldo Awal :</label>
+                              <div class="col-sm-8">
+                              <input type="text" name="saldoawal" id="saldoawal" class="form-control required form" placeholder="Tulisakan saldo awal (ex 5000)">
                               </div>
                         </div>
                         
+                        <div class="form-group">
+                          <label for="tgl_transaksi" class="col-sm-4 control-label" >Tanggal :</label>
+                          <div class="col-sm-8">
+                            <input type="date" name="tgl_transaksi" id="tgl_transaksi" class="form-control" >
+                          </div>
+                        </div>
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
@@ -85,6 +89,18 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <script>
+$('.karyawan  ').select2({
+  placeholder: 'Pilih karyawan',
+  allowClear: true
+});
+
+$('.form').select2({
+  placeholder: 'Pilih akun',
+  allowClear: true
+});
+	</script>
 
     <script type="text/javascript">
       $(".form_datetime").datetimepicker({

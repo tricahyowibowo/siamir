@@ -88,6 +88,9 @@ $route['Datadivisi'] = 'divisi/datadivisi';
 $route['Dataakun'] = 'akun/dataakun';
 $route['Datasaldoawal'] = 'akun/datasaldoawal';
 
+$route['Datasaldoawalkaryawan'] = 'akun/datasaldoawalkaryawan';
+$route['tambahsaldoawalkaryawan'] = 'akun/tambahsaldoawalkaryawan';
+
 $route['Datafaq'] = 'faq/datafaq';
 
 $route['tambahtransaksi/(:any)'] = 'transaksi/kategori/$2';
@@ -108,8 +111,6 @@ $route['jurnalexcel/(:any)'] = 'transaksi/jurnalexcel/$2';
 $route['jurnalexcel/(:any)/(:num)/(:num)/(:num)'] = 'transaksi/jurnalexcel/$2/$3/$4/$5';
 
 $route['bukubesarexcel/(:any)'] = 'transaksi/bukubesarexcel';
-$route['bukubesarexcel/(:any)/(:num)/(:num)/(:num)'] = 'transaksi/bukubesarexcel/$2/$3/$4/$5';
-
 $route['neraca/(:any)'] = 'transaksi/neraca';
 
 $route['pembayaranpiutang'] = 'piutang/kategori';
