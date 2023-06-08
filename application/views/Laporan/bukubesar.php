@@ -118,9 +118,8 @@ input[type="month"]:active::before {
                       <?php 
                       $kode_transaksi = $dd->kode_transaksi;
                       $no_transaksi = $dd->no_transaksi;
-                      $akun = $dd->akun;
 
-                      $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $akun, $tgl_awal, $tgl_akhir); 
+                      $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filter, $tgl_awal, $tgl_akhir); 
 
                       foreach ($rinci_data as $rd) { ?>
                       <td><?=$no++?></td>

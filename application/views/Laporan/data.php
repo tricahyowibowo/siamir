@@ -102,7 +102,7 @@
                     <?php 
                     $kode_transaksi = $dd->kode_transaksi;
                     $no_transaksi = $dd->no_transaksi;
-                    $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $akun, $tgl_awal, $tgl_akhir); 
+                    $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filter, $tgl_awal, $tgl_akhir); 
 
                     foreach ($rinci_data as $rd) { ?>
                     <tr>

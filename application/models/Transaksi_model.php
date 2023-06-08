@@ -37,13 +37,13 @@ class Transaksi_model extends CI_Model
     }
 
     public function GettransaksiByID($kode_transaksi, $no_transaksi){
-        $this->db->select('SUM(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, SUM(case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
         $this->db->where('kode_transaksi', $kode_transaksi);
         $this->db->where('no_transaksi', $no_transaksi);
-        $this->db->group_by('a.keterangan');
+        // $this->db->group_by('a.keterangan');
         $this->db->order_by('a.akun', 'desc');
         $query = $this->db->get();
 
@@ -63,11 +63,12 @@ class Transaksi_model extends CI_Model
         return $hasil->kodemsk;
     }
 
-    public function cekkodebytanggal($bulan,$tahun)
+    public function cekkodebytanggal($kode, $bulan,$tahun)
     {
         // $query = $this->db->query("SELECT MAX(kode_transaksi) as kodemsk from tbl_transaksi");
         $this->db->select('MAX(no_transaksi) as kodemsk');
         $this->db->from('tbl_transaksi');
+        $this->db->where('kode_transaksi',$kode);
         $this->db->where('MONTH(tgl_transaksi)',$bulan);
         $this->db->where('YEAR(tgl_transaksi)',$tahun);
         $query = $this->db->get();
@@ -272,7 +273,7 @@ class Transaksi_model extends CI_Model
         return $result;
     }
 
-    public function GetTransaksiByKode($kode_transaksi, $no_transaksi, $akun=0, $tgl_awal=0, $tgl_akhir=0){
+    public function GetTransaksiByKode($kode_transaksi, $no_transaksi, $filter, $tgl_awal=0, $tgl_akhir=0){
         $this->db->select('SUM(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, SUM(case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
@@ -280,12 +281,7 @@ class Transaksi_model extends CI_Model
         $this->db->where('kode_transaksi', $kode_transaksi);
         $this->db->where('no_transaksi', $no_transaksi);
         $this->db->where('a.kategori_id <= 5');
-        // $this->db->where('a.akun > 11117');
-
-
-        if ($akun != 0 ){
-            $this->db->where('a.akun !=', $akun);
-        }
+        $this->db->where('a.akun !=', $filter);
 
         $query = $this->db->get();
 

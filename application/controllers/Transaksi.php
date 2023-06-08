@@ -170,17 +170,19 @@ class Transaksi extends BaseController
 
         $kode_sumber = $kode1.$kode2.$kode3;
 
+        $kode = $kode_kategori.$kode_sumber;
+
         $tanggal = strftime('%m%Y', strtotime($tgl_transaksi));
         $bln = substr($tanggal, 0, 2);
         $thn = substr($tanggal, 2, 7);
         // // $tanggal = $this->transaksi_model->cektanggal();
 
-        $cektanggal = $this->transaksi_model->cekkodebytanggal($bln, $thn);
+        $cektanggal = $this->transaksi_model->cekkodebytanggal($kode, $bln, $thn);
         // contoh JRD0004, angka 3 adalah awal pengambilan angka, dan 4 jumlah angka yang diambil
         $nourut = substr($cektanggal, 4, 3);
         $no_transaksi = $nourut + 1;
 
-        // var_dump($id_kategori);
+        var_dump($kode);
 
 
         $data = array(
