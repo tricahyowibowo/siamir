@@ -128,22 +128,7 @@ class Transaksi extends BaseController
             $nama_sumber = $s->nama_akun;
         }
 
-        $kas=substr($nama_sumber, 0, 3);
-
-        
-
         $cek=substr($nama_sumber, 0, 4);
-        // if($cek === "BANK"){
-        //     $kode1= substr($nama_sumber, 0, 1);
-        //     $kode2= substr($nama_sumber, 5, 1);
-        // }elseif($cek ==="DEPO"){
-        //     $kode1= substr($nama_sumber, 0, 1);
-        //     $kode2= substr($nama_sumber, 1, 1);
-        // }else{
-        //     $kode1= substr($nama_sumber, 0, 1);
-        //     $kode2= substr($nama_sumber, 4, 1);
-        // }
-
         switch ($cek) {
         case "BANK":
             $kode1= substr($nama_sumber, 0, 1);
@@ -181,8 +166,6 @@ class Transaksi extends BaseController
         // contoh JRD0004, angka 3 adalah awal pengambilan angka, dan 4 jumlah angka yang diambil
         $nourut = substr($cektanggal, 4, 3);
         $no_transaksi = $nourut + 1;
-
-        var_dump($kode);
 
 
         $data = array(
@@ -621,195 +604,194 @@ class Transaksi extends BaseController
 // LAPORAN EXCEL//
 
     //JURNAL----//
-    public function jurnalexcel(){
-        $page = $this->uri->segment(3);
-        $filterakun = $this->uri->segment(4);
-        $tgl_awal = $this->uri->segment(5); 
-        $tgl_akhir = $this->uri->segment(6);
-        $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
-        $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
-        $periode = strftime("%B", strtotime(date("Y/m/d")));
-    
-    
-        $transaksi = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal,$tgl_akhir);
-        // $transaksi = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
-    
-        if(is_null($tgl_awal)){
-            $tgl = "01";
-            $bln = date("m");
-            $thn = date("Y");
-    
-            $tgl_awal = $thn.'-'.$bln.'-'.$tgl;
-        };
-    
-    
-        $saldoawal = $this->transaksi_model->Getsaldoawal($page, $filterakun, $tgl_awal);
-    
-        foreach($saldoawal as $s){
-            $saldoawal = $s->debet - $s->kredit;
-        };
+        public function jurnalexcel(){
+            $page = $this->uri->segment(3);
+            $filterakun = $this->uri->segment(4);
+            $tgl_awal = $this->uri->segment(5); 
+            $tgl_akhir = $this->uri->segment(6);
+            $awal = strftime('%d/%b/%Y', strtotime($tgl_awal));
+            $akhir = strftime('%d/%b/%Y', strtotime($tgl_akhir));
+            $periode = strftime("%B", strtotime(date("Y/m/d")));
 
-    $spreadsheet = new Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
+        
+        
+            $transaksi = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal,$tgl_akhir);
+            // $transaksi = $this->transaksi_model->Getbukubesar($page, $akun, $tgl_awal,$tgl_akhir);
+        
+            if(is_null($tgl_awal)){
+                $tgl = "01";
+                $bln = date("m");
+                $thn = date("Y");
+        
+                $tgl_awal = $thn.'-'.$bln.'-'.$tgl;
+            };
+        
+        
+            $saldoawal = $this->transaksi_model->Getsaldoawal($page, $filterakun, $tgl_awal);
+        
+            foreach($saldoawal as $s){
+                $saldoawal = $s->debet - $s->kredit;
+            };
 
-    $style_col = [
-        'font' => ['bold' => true], // Set font nya jadi bold
-        'alignment' => [
-        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
-        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
-        ],
-        'borders' => [
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $style_col = [
+            'font' => ['bold' => true], // Set font nya jadi bold
+            'alignment' => [
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            ],
+            'borders' => [
+                'top' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border top dengan garis tipis
+                'right' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],  // Set border right dengan garis tipis
+                'bottom' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border bottom dengan garis tipis
+                'left' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] // Set border left dengan garis tipis
+            ]
+        ];
+
+        $styleRight = [
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+            
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row = [
+            'alignment' => [
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            ],
+            'borders' => [
             'top' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border top dengan garis tipis
             'right' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],  // Set border right dengan garis tipis
             'bottom' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border bottom dengan garis tipis
             'left' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] // Set border left dengan garis tipis
-        ]
-    ];
-
-    $styleRight = [
-        'font' => [
-            'bold' => true,
-        ],
-        'alignment' => [
-            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-        ],
-        'borders' => [
-            'top' => [
-                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-            ],
-        ],
-    ];
+            ]
+        ];
         
 
-    // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
-    $style_row = [
-        'alignment' => [
-        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
-        ],
-        'borders' => [
-        'top' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border top dengan garis tipis
-        'right' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],  // Set border right dengan garis tipis
-        'bottom' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border bottom dengan garis tipis
-        'left' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] // Set border left dengan garis tipis
-        ]
-    ];
-    
+        $sheet->setCellValue('B2', 'Laporan Data Jurnal '.$page.' PT. MIROTA KSM'); // Set kolom A1 dengan tulisan "DATA SISWA"
+        $sheet->mergeCells('B2:E2'); // Set Merge Cell pada kolom A1 sampai E1
 
-    $sheet->setCellValue('B2', 'Laporan Data Jurnal '.$page.' PT. MIROTA KSM'); // Set kolom A1 dengan tulisan "DATA SISWA"
-    $sheet->mergeCells('B2:E2'); // Set Merge Cell pada kolom A1 sampai E1
+        if (isset($tgl_awal) && isset($tgl_akhir)){
+            $sheet->setCellValue('B3', 'Periode : '.$awal.' - '.$akhir);
+        }else{
+            $sheet->setCellValue('B3', 'Periode : '.$periode);
+        }
 
-    if (isset($tgl_awal) && isset($tgl_akhir)){
-        $sheet->setCellValue('B3', 'Periode : '.$awal.' - '.$akhir);
-    }else{
-        $sheet->setCellValue('B3', 'Periode : '.$periode);
-    }
+        $sheet->mergeCells('B3:D3');
 
-    $sheet->mergeCells('B3:D3');
+        $sheet->setCellValue('B5', 'No');
+        $sheet->setCellValue('C5', 'Kode');
+        $sheet->setCellValue('D5', 'Tanggal');
+        $sheet->setCellValue('E5', 'Akun');
+        $sheet->setCellValue('F5', 'Keterangan');
+        $sheet->setCellValue('G5', 'Debet (Rp)');
+        $sheet->setCellValue('H5', 'Kredit (Rp)');
 
-    $sheet->setCellValue('B5', 'No');
-    $sheet->setCellValue('C5', 'Kode');
-    $sheet->setCellValue('D5', 'Tanggal');
-    $sheet->setCellValue('E5', 'Akun');
-    $sheet->setCellValue('F5', 'Keterangan');
-    $sheet->setCellValue('G5', 'Debet (Rp)');
-    $sheet->setCellValue('H5', 'Kredit (Rp)');
-    $sheet->setCellValue('I5', 'Saldo (Rp)');
+        $sheet->getStyle('B5')->applyFromArray($style_col);
+        $sheet->getStyle('C5')->applyFromArray($style_col);
+        $sheet->getStyle('D5')->applyFromArray($style_col);
+        $sheet->getStyle('E5')->applyFromArray($style_col);
+        $sheet->getStyle('F5')->applyFromArray($style_col);
+        $sheet->getStyle('G5')->applyFromArray($style_col);
+        $sheet->getStyle('H5')->applyFromArray($style_col);
 
-    $sheet->getStyle('B5')->applyFromArray($style_col);
-    $sheet->getStyle('C5')->applyFromArray($style_col);
-    $sheet->getStyle('D5')->applyFromArray($style_col);
-    $sheet->getStyle('E5')->applyFromArray($style_col);
-    $sheet->getStyle('F5')->applyFromArray($style_col);
-    $sheet->getStyle('G5')->applyFromArray($style_col);
-    $sheet->getStyle('H5')->applyFromArray($style_col);
-    $sheet->getStyle('I5')->applyFromArray($style_col);
-
-    $no = 1; // Untuk penomoran tabel, di awal set dengan 1
-    $numrow = 6; // Set baris pertama untuk isi tabel adalah baris ke 4
-    $numrow2 = 7;
-    $debet = 0;
-    $kredit = 0;
-    $saldo = 0;
+        $no = 1; // Untuk penomoran tabel, di awal set dengan 1
+        $numrow = 6; // Set baris pertama untuk isi tabel adalah baris ke 4
+        $numrow2 = 7;
+        $debet = 0;
+        $kredit = 0;
+        $saldo = 0;
 
 
-    foreach($transaksi as $dd){ // Lakukan looping
+        foreach($transaksi as $dd){ // Lakukan looping
 
-        $kode_transaksi = $dd->kode_transaksi;
-        $no_transaksi = $dd->no_transaksi;
+            $kode_transaksi = $dd->kode_transaksi;
+            $no_transaksi = $dd->no_transaksi;
 
-        $detailtransaksi = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filterakun, $tgl_awal, $tgl_akhir);
+            $detailtransaksi = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filterakun, $tgl_awal, $tgl_akhir);
 
-        foreach($detailtransaksi as $dt){               
-            $sheet->setCellValue('B'.$numrow, $no);
-            $sheet->setCellValue('C'.$numrow, $dt->kode_transaksi.$dt->no_transaksi);
-            $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dt->tgl_transaksi)));
-            $sheet->setCellValue('E'.$numrow, $dt->id_akun);
-            $sheet->setCellValue('F'.$numrow, $dt->nama_akun." ".$dt->keterangan);
-            $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dt->debet,2,",","."));
-            $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dt->kredit,2,",","."));
-            
+            foreach($detailtransaksi as $dt){               
+                $sheet->setCellValue('B'.$numrow, $no);
+                $sheet->setCellValue('C'.$numrow, $dt->kode_transaksi.$dt->no_transaksi);
+                $sheet->setCellValue('D'.$numrow, strftime('%d %B %Y', strtotime($dt->tgl_transaksi)));
+                $sheet->setCellValue('E'.$numrow, $dt->id_akun);
+                $sheet->setCellValue('F'.$numrow, $dt->nama_akun." ".$dt->keterangan);
+                $sheet->setCellValue('G'.$numrow, "Rp. ".number_format($dt->debet,2,",","."));
+                $sheet->setCellValue('H'.$numrow, "Rp. ".number_format($dt->kredit,2,",","."));
+                
 
-            $sheet->getColumnDimension('B')->setAutoSize(true);
-            $sheet->getColumnDimension('C')->setAutoSize(true);
-            $sheet->getColumnDimension('D')->setAutoSize(true);
-            $sheet->getColumnDimension('E')->setWidth(40, 'pt');
-            $sheet->getColumnDimension('F')->setAutoSize(true);
-            $sheet->getColumnDimension('G')->setAutoSize(true);
-            $sheet->getColumnDimension('H')->setAutoSize(true);
+                $sheet->getColumnDimension('B')->setAutoSize(true);
+                $sheet->getColumnDimension('C')->setAutoSize(true);
+                $sheet->getColumnDimension('D')->setAutoSize(true);
+                $sheet->getColumnDimension('E')->setWidth(40, 'pt');
+                $sheet->getColumnDimension('F')->setAutoSize(true);
+                $sheet->getColumnDimension('G')->setAutoSize(true);
+                $sheet->getColumnDimension('H')->setAutoSize(true);
 
-            // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
-            $sheet->getStyle('B'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
-            $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
+                // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+                $sheet->getStyle('B'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
+                $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
 
-            $sheet->setCellValue('B'.$numrow2, $no);
-            $sheet->setCellValue('C'.$numrow2, $dd->kode_transaksi.$dd->no_transaksi);
-            $sheet->setCellValue('D'.$numrow2, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
-            $sheet->setCellValue('E'.$numrow2, $dd->id_akun);
-            $sheet->setCellValue('F'.$numrow2, $dd->nama_akun." ".$dd->keterangan);
-            $sheet->setCellValue('G'.$numrow2, "Rp. ".number_format($dd->debet,2,",","."));
-            $sheet->setCellValue('H'.$numrow2, "Rp. ".number_format($dd->kredit,2,",","."));
+                $sheet->setCellValue('B'.$numrow2, $no);
+                $sheet->setCellValue('C'.$numrow2, $dd->kode_transaksi.$dd->no_transaksi);
+                $sheet->setCellValue('D'.$numrow2, strftime('%d %B %Y', strtotime($dd->tgl_transaksi)));
+                $sheet->setCellValue('E'.$numrow2, $dd->id_akun);
+                $sheet->setCellValue('F'.$numrow2, $dd->nama_akun." ".$dd->keterangan);
+                $sheet->setCellValue('G'.$numrow2, "Rp. ".number_format($dd->debet,2,",","."));
+                $sheet->setCellValue('H'.$numrow2, "Rp. ".number_format($dd->kredit,2,",","."));
 
-            $sheet->getColumnDimension('B')->setAutoSize(true);
-            $sheet->getColumnDimension('C')->setAutoSize(true);
-            $sheet->getColumnDimension('D')->setAutoSize(true);
-            $sheet->getColumnDimension('E')->setWidth(40, 'pt');
-            $sheet->getColumnDimension('F')->setAutoSize(true);
-            $sheet->getColumnDimension('G')->setAutoSize(true);
-            $sheet->getColumnDimension('H')->setAutoSize(true);
+                $sheet->getColumnDimension('B')->setAutoSize(true);
+                $sheet->getColumnDimension('C')->setAutoSize(true);
+                $sheet->getColumnDimension('D')->setAutoSize(true);
+                $sheet->getColumnDimension('E')->setWidth(40, 'pt');
+                $sheet->getColumnDimension('F')->setAutoSize(true);
+                $sheet->getColumnDimension('G')->setAutoSize(true);
+                $sheet->getColumnDimension('H')->setAutoSize(true);
 
-            // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
-            $sheet->getStyle('B'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('C'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('D'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('E'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('F'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('G'.$numrow2)->applyFromArray($style_row);
-            $sheet->getStyle('H'.$numrow2)->applyFromArray($style_row);
+                // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+                $sheet->getStyle('B'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('C'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('D'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('E'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('F'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('G'.$numrow2)->applyFromArray($style_row);
+                $sheet->getStyle('H'.$numrow2)->applyFromArray($style_row);
+            };
+
+            $no++; // Tambah 1 setiap kali looping
+            $numrow = $numrow+2; // Tambah 1 setiap kali looping
+            $numrow2 = $numrow2+2; // Tambah 1 setiap kali looping
         };
 
-        $no++; // Tambah 1 setiap kali looping
-        $numrow++; // Tambah 1 setiap kali looping
-        $numrow2++; // Tambah 1 setiap kali looping
-    };
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.ms-excel');
 
-    $writer = new Xlsx($spreadsheet);
-    header('Content-Type: application/vnd.ms-excel');
+        if (isset($tgl_awal) && isset($tgl_akhir)){
+            header('Content-Disposition: attactchment;filename="Jurnal"'.$page.' '.$awal.' - '.$akhir.'.xlsx');
+        }else{
+            header('Content-Disposition: attactchment;filename="Jurnal"'.$page.'_'.$periode.'.xlsx');
+        }
 
-    if (isset($tgl_awal) && isset($tgl_akhir)){
-        header('Content-Disposition: attactchment;filename="Jurnal"'.$page.' '.$awal.' - '.$akhir.'.xlsx');
-    }else{
-        header('Content-Disposition: attactchment;filename="Jurnal"'.$page.'_'.$periode.'.xlsx');
-    }
-
-    header('Cache-Control: max-age=0');
-    $writer->save("php://output");
-    exit();
-    }
+        header('Cache-Control: max-age=0');
+        $writer->save("php://output");
+        exit();
+        }
     //----JURNAL//
 
     //BUKU BESAR---//

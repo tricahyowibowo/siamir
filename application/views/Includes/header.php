@@ -218,7 +218,7 @@
             </li>
             <?php } ?>
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_PK || $role == ROLE_KABAG)
+            if($role == ROLE_ADMIN || $role == ROLE_PK || $role == ROLE_KABAG  )
             {
             ?>
             <li class="header">DATA PIUTANG</li>
@@ -244,6 +244,12 @@
               <a href="<?php echo base_url(); ?>userListing">
                 <i class="fa fa-users"></i>
                 <span>Users</span>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo base_url(); ?>HapusData">
+                <i class="fa fa-trash"></i>
+                <span>Hapus Data</span>
               </a>
             </li>
             <?php

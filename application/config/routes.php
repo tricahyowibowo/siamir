@@ -115,5 +115,7 @@ $route['neraca/(:any)'] = 'transaksi/neraca';
 
 $route['pembayaranpiutang'] = 'piutang/kategori';
 $route['Datapiutang'] = 'piutang/datapiutang';
+
+$route['Hapusdata'] = 'HapusData/kategori';
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

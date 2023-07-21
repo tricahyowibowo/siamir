@@ -5,9 +5,11 @@
   <meta charset="UTF-8">
   <title>Mirota KSM | Admin System Log in</title>
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-  <link href="<?php echo base_url(); ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/adminlte2/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <link href="<?php echo base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/adminlte2/dist/css/AdminLTE.min.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,6 +28,12 @@
 
   small {
     font-size: 20px;
+  }
+
+  .info{
+    width: 400px;
+    height: 100%;
+    background-color: black;
   }
 
   .login-box-body {
@@ -66,9 +74,9 @@
 
 <body>
   <div class="login-box">
-  <div class="login-logo">
-        <a href="#"><b>SI AMIR |<small>Sistem Akutansi Mirota</small></b></a>
-      </div><!-- /.login-logo -->
+    <div class="login-logo">
+      <a href="#"><b>SI AMIR |<small>Sistem Akutansi Mirota</small></b></a>
+    </div><!-- /.login-logo -->
     <div class="login-box-body">
       <p class="login-box-msg">Sign In</p>
       <?php $this->load->helper('form'); ?>

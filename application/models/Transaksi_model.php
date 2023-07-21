@@ -51,6 +51,31 @@ class Transaksi_model extends CI_Model
         return $result;
     }
 
+    public function GettransaksiByKodetransaksi($kode_sumber, $tgl_awal, $tgl_akhir){
+        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, SUBSTRING(kode_transaksi, 3) as kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
+        $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        
+        $this->db->where('kode_transaksi', $kode_sumber);
+        // $this->db->or_where('kode_transaksi', $kode2);
+
+        if($tgl_awal != 0 && $tgl_akhir != 0 ){
+            $this->db->where('a.tgl_transaksi >=', $tgl_awal);
+            $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
+        }else{  
+            $this->db->where('MONTH(a.tgl_transaksi)',date('m'));
+            $this->db->where('YEAR(a.tgl_transaksi)',date('Y'));
+        }
+
+        $this->db->order_by('no_transaksi', 'ASC');
+
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
     public function cekkodetransaksi($id)
     {
         $this->db->select('MAX(kode_transaksi) as kodemsk');
@@ -63,7 +88,7 @@ class Transaksi_model extends CI_Model
         return $hasil->kodemsk;
     }
 
-    public function cekkodebytanggal($kode, $bulan,$tahun)
+    public function cekkodebytanggal($kode, $bulan, $tahun)
     {
         // $query = $this->db->query("SELECT MAX(kode_transaksi) as kodemsk from tbl_transaksi");
         $this->db->select('MAX(no_transaksi) as kodemsk');
@@ -243,13 +268,13 @@ class Transaksi_model extends CI_Model
         return $result;
     }
 
-    public function Getfilterakun($page, $filterakun, $tgl_awal=0, $tgl_akhir=0){
+    public function ShowData($page, $filterakun, $tgl_awal=0, $tgl_akhir=0){
         $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.tgl_transaksi, a.akun, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
-        $this->db->where('a.akun', $filterakun);
         $this->db->where('a.kategori_id <= 5');
+        $this->db->order_by('no_transaksi');
 
         if($page === "kas"){
             $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 6');
@@ -265,8 +290,33 @@ class Transaksi_model extends CI_Model
             $this->db->where('MONTH(a.tgl_transaksi)',date('m'));
         }
 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
 
-        $this->db->order_by('a.tgl_transaksi', 'asc');  
+    public function Getfilterakun($page, $filterakun, $tgl_awal=0, $tgl_akhir=0){
+        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.tgl_transaksi, a.akun, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
+        $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        $this->db->where('a.akun', $filterakun);
+        $this->db->where('a.kategori_id <= 5');
+        $this->db->order_by('no_transaksi');
+
+        if($page === "kas"){
+            $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4 AND a.kategori_id != 6');
+        }elseif($page === "bank"){
+            $this->db->where('a.kategori_id > 2');
+        }
+
+
+        if($tgl_awal != 0 && $tgl_akhir != 0 ){
+            $this->db->where('a.tgl_transaksi >=', $tgl_awal);
+            $this->db->where('a.tgl_transaksi <=', $tgl_akhir);
+        }else{
+            $this->db->where('MONTH(a.tgl_transaksi)',date('m'));
+        }
 
         $query = $this->db->get();
         $result = $query->result();
@@ -312,7 +362,6 @@ class Transaksi_model extends CI_Model
     }
     // ------------------TRANSAKSI PIUTANG--------------------------------------
 
-
     public function Getsaldoawal($page, $akun, $tgl_akhir){
         $this->db->select('SUM(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, SUM(case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.tgl_transaksi, a.akun, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
@@ -321,9 +370,11 @@ class Transaksi_model extends CI_Model
         $this->db->where('a.akun', $akun);
         // $this->db->order_by('tgl_transaksi', 'desc');
         $this->db->where('a.tgl_transaksi <', $tgl_akhir);
+        // $this->db->where('YEAR(a.tgl_transaksi)', $thn);
+
 
         if($page === "kas"){
-            $this->db->where('a.kategori_id < 3 OR a.kategori_id > 4 ');
+            $this->db->where('a.kategori_id != 3 AND a.kategori_id != 4');
         }elseif($page === "bank"){
             $this->db->where('a.kategori_id > 2');
         }
@@ -415,5 +466,20 @@ class Transaksi_model extends CI_Model
         return $result;
     }
     // ------------------/TRANSAKSI PIUTANG-------------------------------------- //
+
+    public function Getkodetransaksi($kode_transaksi, $no_transaksi){
+        $this->db->select('a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
+        $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        $this->db->where('kode_transaksi', $kode_transaksi);
+        $this->db->where('no_transaksi', $no_transaksi);
+        // $this->db->group_by('a.keterangan');
+        $this->db->order_by('a.akun', 'desc');
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
 
 }

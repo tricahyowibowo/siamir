@@ -17,7 +17,7 @@
     <div class="row">
       <!-- left column -->
       <div class="container">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
@@ -25,8 +25,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <div class="container">
-
+            <div class="box-body">
               <?php if($this->session->flashdata('msg_berhasil')){ ?>
                 <div class="alert alert-success alert-dismissible" style="width:91%">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -72,8 +71,9 @@
                 </div>
               </div>
             </div>
-          <!-- /.box -->
           </div>
+          
+          <!-- /.box -->
         </div>
       </div>
       <!--/.col (right) -->

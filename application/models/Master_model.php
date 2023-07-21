@@ -31,6 +31,17 @@ class Master_model extends CI_Model
         return $result;
     }
 
+    public function getDataKategoriAll(){
+        $this->db->select('*');
+        $this->db->from('tbl_kategori');
+        $this->db->where('id_kategori != 0');
+        
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
     public function getDataKategori($page){
         $this->db->select('*');
         $this->db->from('tbl_kategori');
@@ -57,6 +68,16 @@ class Master_model extends CI_Model
         }elseif($page === "bank"){
             $this->db->where('id_akun > 11102 AND id_akun <= 11117');
         }
+
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
+    public function getDataSumberAll(){
+        $this->db->select('*');
+        $this->db->from('tbl_dafakun');
 
         $query = $this->db->get();
 
@@ -121,6 +142,20 @@ class Master_model extends CI_Model
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
         $this->db->where('no_transaksi', $no_transaksi);
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
+    public function GettransaksiByKode($kode, $tanggal){
+        $this->db->select('a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+        $this->db->from('tbl_transaksi a');
+        $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
+        $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
+        $this->db->where('kode_transaksi', $kode);
+        $this->db->where('tgl_transaksi', $tanggal);
+        // $this->db->where('kode_transaksi', $sumber);
         $query = $this->db->get();
 
         $result = $query->result();

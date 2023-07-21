@@ -81,7 +81,7 @@ class Piutang extends BaseController
         // $tanggal = substr($tgl_transaksi, 5, 2);
         // $tanggal = $this->transaksi_model->cektanggal();
         // var_dump($tanggal);
-        $cektanggal = $this->transaksi_model->cekkodebytanggal($bulan, $tahun);
+        $cektanggal = $this->transaksi_model->cekkodebytanggal($kode_transaksi, $bulan, $tahun);
         // var_dump($cektanggal);
         // contoh JRD0004, angka 3 adalah awal pengambilan angka, dan 4 jumlah angka yang diambil
         $nourut = substr($cektanggal, 4, 3);

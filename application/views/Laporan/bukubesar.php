@@ -93,7 +93,7 @@ input[type="month"]:active::before {
                     <th>No</th>
                     <th>kode</th>
                     <th>Tanggal</th>
-                    <th style="width:400px;">Akun - Keterangan</th>
+                    <th style="width:200px;">Akun - Keterangan</th>
                     <th>Debit (Rp)</th>
                     <th>Kredit (Rp)</th>
                     <th>Saldo</th>
@@ -114,24 +114,17 @@ input[type="month"]:active::before {
                   </tr> -->
   
                   <tr>
-                    <?php foreach($list_datafilter as $dd): ?>
-                      <?php 
-                      $kode_transaksi = $dd->kode_transaksi;
-                      $no_transaksi = $dd->no_transaksi;
-
-                      $rinci_data = $this->transaksi_model->GetTransaksiByKode($kode_transaksi, $no_transaksi, $filter, $tgl_awal, $tgl_akhir); 
-
-                      foreach ($rinci_data as $rd) { ?>
-                      <td><?=$no++?></td>
-                      <td><?= $rd->kode_transaksi.$rd->no_transaksi?></td>
-                      <td><?=mediumdate_indo($rd->tgl_transaksi)?></td>
-                      <td><?=$rd->id_akun." - ".$rd->nama_akun?> <?=$rd->keterangan?></td>
-                      <td class="text-center">
+                    <?php foreach($data_transaksi as $dd){ ?>
+                        <td><?=$no++?></td>
+                        <td><?= $dd->kode_transaksi.$dd->no_transaksi?></td>
+                        <td><?=mediumdate_indo($dd->tgl_transaksi)?></td>
+                        <td><?=$dd->id_akun." - ".$dd->nama_akun?> <?=$dd->keterangan?></td>
+                        <td class="text-center">
                           <?php 
-                          if($rd->jenis_transaksi == "Kredit"){
-                            echo "Rp. ".number_format($rd->kredit,2,",",".")." ,-";
-                            $saldoawal+=$rd->kredit;
-                            $debet+=$rd->kredit;
+                          if($dd->jenis_transaksi == "Kredit"){
+                            echo "Rp. ".number_format($dd->kredit,2,",",".")." ,-";
+                            $saldoawal+=$dd->kredit;
+                            $debet+=$dd->kredit;
                           }else{
                             echo "-";
                           }
@@ -139,20 +132,18 @@ input[type="month"]:active::before {
                         </td>
                         <td class="text-center">
                           <?php 
-                          if($rd->jenis_transaksi == "Debet"){
-                            echo "Rp. ".number_format($rd->debet,2,",",".");
-                            $saldoawal-=$rd->debet;
-                            $kredit+=$rd->debet;
+                          if($dd->jenis_transaksi == "Debet"){
+                            echo "Rp. ".number_format($dd->debet,2,",",".");
+                            $saldoawal-=$dd->debet;
+                            $kredit+=$dd->debet;
                           }else{
                             echo "-";
                           }
                           ?>
                         </td>
                         <th><?php echo "Rp. ".number_format($saldoawal,2,",","."); ?></th> 
-                        <?php }?>
-
-                    </tr>
-                <?php endforeach;?>
+                  </tr>
+                <?php } ?>
                 <?php }else { ?>
                       <td colspan="7" align="center"><strong>Data Kosong</strong></td>
                 <?php } ?>
