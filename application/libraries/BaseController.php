@@ -123,9 +123,7 @@ class BaseController extends CI_Controller {
 		$kode_transaksi1 = $kategori1.$kode_sumber;
 		$kode_transaksi2 = $kategori2.$kode_sumber;
 
-		$tes = substr($kode_transaksi1, 2, 3);
-
-		var_dump($kode_sumber);
+		$tes = substr($kode_transaksi1, 3, 3);
 
 		$cek = $this->uri->segment(1);
 
@@ -134,7 +132,7 @@ class BaseController extends CI_Controller {
 				$list_data = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
 			break;
 			case 'bukubesar':
-				$list_data = $this->transaksi_model->GettransaksiByKodetransaksi($kode_sumber, $tgl_awal, $tgl_akhir);
+				$list_data = $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $kode_transaksi2 , $tgl_awal, $tgl_akhir);
 			break;
 			case 'neraca':
 				$list_data = $this->transaksi_model->Getneraca($page);
@@ -158,7 +156,7 @@ class BaseController extends CI_Controller {
 			'filter' 		=> $filterakun,
 			'list_data' => $list_data,
 			'list_datafilter' => $filter_akun,
-			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($kode_transaksi1, $kode_transaksi2 , $tgl_awal, $tgl_akhir),
+			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $kode_transaksi2 , $tgl_awal, $tgl_akhir),
             'list_akun' => $this->transaksi_model->GetAkun(),
             );
 		return $data;

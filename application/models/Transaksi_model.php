@@ -51,14 +51,14 @@ class Transaksi_model extends CI_Model
         return $result;
     }
 
-    public function GettransaksiByKodetransaksi($kode_sumber, $tgl_awal, $tgl_akhir){
-        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, SUBSTRING(kode_transaksi, 3) as kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
+    public function GettransaksiByKodetransaksi($filterakun, $kode1, $kode2, $tgl_awal, $tgl_akhir){
+        $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
         
-        $this->db->where('kode_transaksi', $kode_sumber);
-        // $this->db->or_where('kode_transaksi', $kode2);
+        $this->db->where('kode_transaksi', $kode1);
+        $this->db->where('akun !=', $filterakun);
 
         if($tgl_awal != 0 && $tgl_akhir != 0 ){
             $this->db->where('a.tgl_transaksi >=', $tgl_awal);
