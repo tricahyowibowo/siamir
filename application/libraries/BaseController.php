@@ -133,7 +133,7 @@ class BaseController extends CI_Controller {
 				$list_data = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
 			break;
 			case 'bukubesar':
-				$list_data = $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $kode_transaksi2 , $tgl_awal, $tgl_akhir);
+				$list_data = $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $tgl_awal, $tgl_akhir);
 			break;
 			case 'neraca':
 				$list_data = $this->transaksi_model->Getneraca($page);
@@ -157,11 +157,13 @@ class BaseController extends CI_Controller {
 			'filter' 		=> $filterakun,
 			'list_data' => $list_data,
 			'list_datafilter' => $filter_akun,
-			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_sumber, $kode_transaksi2 , $tgl_awal, $tgl_akhir),
+			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_sumber, $tgl_awal, $tgl_akhir),
             'list_akun' => $this->transaksi_model->GetAkun(),
             );
 		return $data;
 	}
+
+
 	
 	/**
 	 * Takes mixed data and optionally a status code, then creates the response

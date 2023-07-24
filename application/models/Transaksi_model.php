@@ -51,7 +51,7 @@ class Transaksi_model extends CI_Model
         return $result;
     }
 
-    public function GettransaksiByKodetransaksi($filterakun, $kode1, $kode2, $tgl_awal, $tgl_akhir){
+    public function GettransaksiByKodetransaksi($filterakun, $kode1, $tgl_awal, $tgl_akhir){
         $this->db->select('(case when a.jenis_transaksi="Debet" then a.nominal_transaksi end) as debet, (case when a.jenis_transaksi="kredit" then a.nominal_transaksi end) as kredit, a.kode_transaksi, a.no_transaksi, a.jenis_transaksi, a.akun, a.tgl_transaksi, c.id_akun, c.nama_akun, b.nama_kategori, a.keterangan');
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
