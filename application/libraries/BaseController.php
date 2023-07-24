@@ -119,6 +119,7 @@ class BaseController extends CI_Controller {
 		
 
         $kode_sumber = $kode1.$kode2.$kode3;
+		var_dump($kode_sumber);
 		
 		$kode_transaksi1 = $kategori1.$kode_sumber;
 		$kode_transaksi2 = $kategori2.$kode_sumber;
@@ -156,7 +157,7 @@ class BaseController extends CI_Controller {
 			'filter' 		=> $filterakun,
 			'list_data' => $list_data,
 			'list_datafilter' => $filter_akun,
-			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $kode_transaksi2 , $tgl_awal, $tgl_akhir),
+			'data_transaksi' => $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_sumber, $kode_transaksi2 , $tgl_awal, $tgl_akhir),
             'list_akun' => $this->transaksi_model->GetAkun(),
             );
 		return $data;

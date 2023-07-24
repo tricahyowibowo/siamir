@@ -56,9 +56,10 @@ class Transaksi_model extends CI_Model
         $this->db->from('tbl_transaksi a');
         $this->db->join('tbl_kategori b','b.id_kategori = a.kategori_id');
         $this->db->join('tbl_dafakun c','c.id_akun=a.akun');
-        
-        $this->db->where('kode_transaksi', $kode1);
         $this->db->where('akun !=', $filterakun);
+
+        
+        $this->db->where('substring(kode_transaksi,3,3)', $kode1);
 
         if($tgl_awal != 0 && $tgl_akhir != 0 ){
             $this->db->where('a.tgl_transaksi >=', $tgl_awal);
