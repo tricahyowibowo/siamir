@@ -19,7 +19,7 @@ class Akun extends BaseController
         $this->load->model('user_model');
         $this->load->model('crud_model');
         $this->load->model('master_model');
-        // $this->load->model('transaksi_model');
+        $this->load->model('transaksi_model');
         $this->isLoggedIn();   
     }
 
@@ -50,12 +50,46 @@ class Akun extends BaseController
         $tgl_transaksi  = $this->input->post('tgl_transaksi');
         $user_id    = $this->global ['userId'];
 
+        $sumber = $this->transaksi_model->ceksumber($akun);
+        foreach ($sumber as $s){
+            $id_sumber = $s->id_akun;
+            $nama_sumber = $s->nama_akun;
+        }
+
+		$ceksumber=substr($nama_sumber, 0, 4);
+        switch ($ceksumber) {
+        case "BANK":
+            $kode1= substr($nama_sumber, 0, 1);
+            $kode2= substr($nama_sumber, 5, 1);
+
+            $cekbank = substr($nama_sumber, 5, 5);
+
+            if($cekbank == "NIAGA"){
+                $kode3= substr($nama_sumber,11, 1);
+            }else{
+                $kode3= substr($nama_sumber,13, 1);
+            }
+            break;
+        case "DEPO":
+            $kode1= substr($nama_sumber, 0, 1);
+            $kode2= substr($nama_sumber, 1, 1);
+            $kode3= substr($nama_sumber, 2, 1);
+            break;
+        default:
+            $kode1= substr($nama_sumber, 0, 1);
+            $kode2= substr($nama_sumber, 1, 1);
+            $kode3= substr($nama_sumber, 4, 1);
+        }
+		
+
+        $kode_sumber = $kode1.$kode2.$kode3;
+
 
 
         $data = array(
             'tgl_transaksi'     => $tgl_transaksi,
             'jenis_transaksi'   => "Debet",
-            'kode_transaksi'    => "SA",
+            'kode_transaksi'    => "SA".$kode_sumber,
             'kategori_id'       => "6",
             'akun'              => $akun,
             'nominal_transaksi' => $saldoawal,

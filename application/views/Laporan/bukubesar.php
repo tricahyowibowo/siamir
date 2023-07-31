@@ -27,7 +27,7 @@ input[type="month"]:active::before {
 
     <!-- Main content -->
     <section class="content" style="margin-top: 20px;">
-    <div class="row">
+      <div class="row">
         <div class="col-xs-12">
           <div class="box box-primary">
             <div class="box-header">
@@ -179,7 +179,7 @@ input[type="month"]:active::before {
   </div>
   <!-- /.content-wrapper -->
   
-  <script>
+<script>
 $(document).ready(function() {
     var table = $('#example1').DataTable( {
         lengthChange: true,

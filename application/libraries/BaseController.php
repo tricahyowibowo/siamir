@@ -74,17 +74,6 @@ class BaseController extends CI_Controller {
         $tgl_awal = $this->input->post('tgl_awal'); 
         $tgl_akhir = $this->input->post('tgl_akhir');
 		$filter_akun = $this->transaksi_model->Getfilterakun($page, $filterakun, $tgl_awal, $tgl_akhir);
-		// $filter_akun = $this->transaksi_model->ShowData($page, $filterakun, $tgl_awal, $tgl_akhir);
-
-        switch ($page) {
-        case "bank":
-            $kategori1= "BM";
-            $kategori2= "BK";
-        break;
-        default:
-			$kategori1= "KM";
-			$kategori2= "KK";
-        }
 
 		$sumber = $this->transaksi_model->ceksumber($filterakun);
         foreach ($sumber as $s){
@@ -119,26 +108,6 @@ class BaseController extends CI_Controller {
 		
 
         $kode_sumber = $kode1.$kode2.$kode3;
-		var_dump($kode_sumber);
-		
-		$kode_transaksi1 = $kategori1.$kode_sumber;
-		$kode_transaksi2 = $kategori2.$kode_sumber;
-
-		$tes = substr($kode_transaksi1, 3, 3);
-
-		$cek = $this->uri->segment(1);
-
-		switch ($cek) {
-			case 'jurnal':
-				$list_data = $this->transaksi_model->Getjurnal($page, $akun, $tgl_awal,$tgl_akhir);
-			break;
-			case 'bukubesar':
-				$list_data = $this->transaksi_model->GettransaksiByKodetransaksi($filterakun, $kode_transaksi1, $tgl_awal, $tgl_akhir);
-			break;
-			case 'neraca':
-				$list_data = $this->transaksi_model->Getneraca($page);
-			break;
-		}
 
 
 		if (is_null($tgl_awal) && is_null($tgl_akhir)){

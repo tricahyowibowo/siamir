@@ -111,7 +111,7 @@ $route['jurnalexcel/(:any)'] = 'transaksi/jurnalexcel/$2';
 $route['jurnalexcel/(:any)/(:num)/(:num)/(:num)'] = 'transaksi/jurnalexcel/$2/$3/$4/$5';
 
 $route['bukubesarexcel/(:any)'] = 'transaksi/bukubesarexcel';
-$route['neraca/(:any)'] = 'transaksi/neraca';
+$route['neraca/(:any)/(:any)'] = 'transaksi/neraca';
 
 $route['pembayaranpiutang'] = 'piutang/kategori';
 $route['Datapiutang'] = 'piutang/datapiutang';
